@@ -1,0 +1,29 @@
+@(post: Post)
+
+@main(Html("Post created!"), nav = "signup") {
+    <h2>Your Post:</h2>
+    <h6>Title</h6>
+    <p>
+        @Html(post.title)
+    </p>
+    <h6>Body</h6>
+    <p>
+        @Html(post.body)
+    </p>
+    <h6>created</h6>
+    <p>
+        @Html(post.created.format("yyyy-MM-dd'T'HH:mm'Z'"))
+    </p>
+    <h6>edited</h6>
+    <p>
+        @Html(post.edited.format("yyyy-MM-dd'T'HH:mm'Z'"))
+    </p>
+    <h6>published</h6>
+    <p>
+        @if(post.published) {
+        	yes
+       	} else {
+       		not yet
+     	}
+    </p>
+}

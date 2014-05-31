@@ -5,13 +5,10 @@
 # Home page
 GET     /                           controllers.Application.index
 
-# Home page
-POST    /insert                     controllers.Application.insert
-
-GET     /json/all                   controllers.Application.jsonFindAll
-
-# Home page
-POST    /json/insert                controllers.Application.jsonInsert
+# Signup
+GET     /compose                     controllers.ComposePost.form
+GET     /users/fakeuser              controllers.ComposePost.editForm
+POST    /compose                     controllers.ComposePost.submit
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

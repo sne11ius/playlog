@@ -3,9 +3,9 @@
 
 # --- !Ups
 
-create table `CAT` (`name` VARCHAR(254) NOT NULL PRIMARY KEY,`color` VARCHAR(254) NOT NULL);
+create table `post` (`id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,`title` text NOT NULL,`body` text NOT NULL,`date` DATE NOT NULL,`edited` DATE NOT NULL,`published` BOOLEAN NOT NULL,`author` VARCHAR(254) NOT NULL);
 
 # --- !Downs
 
-drop table `CAT`;
+drop table `post`;
 
