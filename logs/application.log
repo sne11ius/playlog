@@ -1,0 +1,9 @@
+2014-06-01 00:29:17,071 - [INFO] - from play in pool-12-thread-4 
+Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+
+2014-06-01 00:29:22,512 - [INFO] - from play in play-internal-execution-context-1 
+database [default] connected at jdbc:mysql://localhost/nu_wasis_playlog_db
+
+2014-06-01 00:29:24,836 - [INFO] - from play in play-internal-execution-context-1 
+Application started (Dev)
+
