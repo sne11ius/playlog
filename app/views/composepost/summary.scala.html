@@ -12,11 +12,11 @@
     </p>
     <h6>created</h6>
     <p>
-        @Html(post.created.format("yyyy-MM-dd'T'HH:mm'Z'"))
+        @formatJoda(post.created)
     </p>
     <h6>edited</h6>
     <p>
-        @Html(post.edited.format("yyyy-MM-dd'T'HH:mm'Z'"))
+        @formatJoda(post.edited)
     </p>
     <h6>published</h6>
     <p>
