@@ -26,4 +26,8 @@ object Posts {
   def insert(post: Post)(implicit s: Session) {
     posts.insert(post)
   }
+  
+  def delete(postId: Long)(implicit s: Session) {
+    (posts filter(_.id === postId)).delete
+  }
 }

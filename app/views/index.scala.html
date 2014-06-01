@@ -5,6 +5,12 @@
     @for(post <- posts) {
         <h2>@Html(post.title)</h2>
         <p>@Html(post.body)</p>
+        @helper.form(action = routes.Application.removePost) {
+          <div class="actions">
+            <input type="hidden" name="postId" value="@post.id">
+            <input type="submit" class="btn danger" value="Eintrag löschen">
+          </div>
+        }
         <hr>
     }
     

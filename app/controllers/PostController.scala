@@ -18,7 +18,7 @@ import play.api.mvc.BodyParsers._
 import play.api.libs.json.Json
 import play.api.libs.json.Json._
 
-object ComposePost extends Controller {
+object PostController extends Controller {
   
   val signupForm: Form[Post] = Form(
     mapping(
@@ -46,9 +46,15 @@ object ComposePost extends Controller {
   }
   
   def submit = DBAction { implicit rs =>
-    val post = signupForm.bindFromRequest.get
-    Posts.insert(post)
-
-    Ok(html.composepost.summary(post))
+    signupForm.bindFromRequest.fold(
+      formWithErrors => {
+        BadRequest(views.html.composepost.form(formWithErrors))
+      },
+      postData => {
+        val post = signupForm.bindFromRequest.get
+        Posts.insert(post)
+        Ok(html.composepost.summary(post))
+      }
+    )
   }
 }

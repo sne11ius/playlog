@@ -9,7 +9,7 @@
 
 @main(title, nav = "compose") {
 	<div class="well well-small">
-	    @helper.form(action = routes.ComposePost.submit) {
+	    @helper.form(action = routes.PostController.submit) {
 	        @inputText(
 	            signupForm("title"),
 	            '_label -> "",

@@ -6,9 +6,10 @@
 GET     /                           controllers.Application.index
 
 # Signup
-GET     /compose                     controllers.ComposePost.form
-GET     /users/fakeuser              controllers.ComposePost.editForm
-POST    /compose                     controllers.ComposePost.submit
+GET     /compose                     controllers.PostController.form
+GET     /users/fakeuser              controllers.PostController.editForm
+POST    /compose                     controllers.PostController.submit
+POST    /removePost                  controllers.Application.removePost
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
