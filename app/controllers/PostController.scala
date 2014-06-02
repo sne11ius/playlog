@@ -18,6 +18,7 @@ import play.api.mvc.BodyParsers._
 import play.api.libs.json.Json
 import play.api.libs.json.Json._
 import org.joda.time.DateTime
+import play.api.libs.json.JsValue
 
 object PostController extends Controller {
   
@@ -44,6 +45,34 @@ object PostController extends Controller {
       None, "faketitle", "fakebody", new DateTime, new DateTime, false, "anon user"
     )
     Ok(html.composepost.form(signupForm.fill(existingPost)))
+  }
+  
+  def showImport = Action {
+    Ok(html.importposts.importPosts())
+  }
+  
+  def importPosts = DBAction { implicit rs =>
+    val json = Json.parse(Form("jsonPosts" -> text).bindFromRequest.get).as[List[JsValue]]
+    json.map(post => {
+      println("=======================================================")
+      val title = (post \ "title").asOpt[String]
+      val body = (post \ "body").asOpt[String]
+      val id = (post \ "id").asOpt[String]
+      val dateCreated = (post \ "dateCreated").asOpt[Long]
+      val dateUpdated = (post \ "dateUpdated").asOpt[Long]
+      def print(name: String, content: Option[AnyRef]) = {
+        println(name + ": " + content)
+      }
+      def printLong(name: String, content: Option[Long]) = {
+        println(name + ": " + content)
+      }
+      print("id", id)
+      print("title", title)
+      print("body", body)
+      printLong("dateCreated", dateCreated)
+      printLong("dateUpdated", dateUpdated)
+    })
+    Ok(html.importposts.importPosts())
   }
   
   def submit = DBAction { implicit rs =>

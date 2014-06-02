@@ -20,6 +20,9 @@
                         <li class="@("active".when(nav == "compose"))">
                             <a href="@routes.PostController.form">Beitrag erstellen</a>
                         </li>
+                        <li class="@("active".when(nav == "import"))">
+                            <a href="@routes.PostController.importPosts">Beiträge importieren</a>
+                        </li>
                     </ul>
                 </div>
             </div>

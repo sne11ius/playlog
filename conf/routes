@@ -9,6 +9,8 @@ GET     /                           controllers.Application.index
 GET     /compose                     controllers.PostController.form
 GET     /users/fakeuser              controllers.PostController.editForm
 POST    /compose                     controllers.PostController.submit
+POST    /importPosts                 controllers.PostController.importPosts
+GET     /importPosts                 controllers.PostController.showImport
 POST    /removePost                  controllers.Application.removePost
 
 # Map static resources from the /public folder to the /assets URL path
