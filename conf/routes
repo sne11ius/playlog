@@ -12,6 +12,7 @@ POST    /compose                     controllers.PostController.submit
 POST    /importPosts                 controllers.PostController.importPosts
 GET     /importPosts                 controllers.PostController.showImport
 POST    /removePost                  controllers.Application.removePost
+GET     /removeAllPosts              controllers.Application.removeAll
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
