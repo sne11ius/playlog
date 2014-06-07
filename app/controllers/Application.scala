@@ -14,8 +14,22 @@ import play.api.data.Forms._
 
 object Application extends Controller {
   
-  def index = DBAction { implicit rs =>
-    Ok(views.html.index(Posts.findAll))
+  def setup = DBAction { implicit rs =>
+    Ok(views.html.setup.step0())
+  }
+  
+  def index = DBAction { implicit rs =>  
+    Ok(views.html.index(Posts.findAllPublished))
+  }
+  
+  def removeAll = DBAction { implicit rs => {
+      Posts.findAll.toList.map(post => {
+        if (!post.id.isEmpty) {
+          Posts.delete(post.id.get)
+        }
+      })
+      Ok(views.html.index(Posts.findAllPublished))
+    }
   }
 
   def removePost = DBAction { implicit rs => {

@@ -1,4 +1,4 @@
-@(signupForm: Form[Post])
+@(createPostForm: Form[Post])
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -8,24 +8,30 @@
 }
 
 @main(title, nav = "compose") {
-	<div class="well well-small">
-	    @helper.form(action = routes.PostController.submit) {
-	        @inputText(
-	            signupForm("title"),
-	            '_label -> "",
-	            '_help -> "",
-	            'placeholder -> "title - don't forget you can use html here"
-	        )
-	        @textarea(
-	            signupForm("body"),
-	            '_label -> "",
-	            '_help -> "",
-	            'placeholder -> "body - don't forget you can use html here, too"
-	        )
-	        <div class="actions">
-	            <a href="@routes.Application.index" class="btn danger">Abbrechen</a>
-	            <input type="submit" class="btn primary" value="Speichern">
-	        </div>
-	    }
+  <div class="well well-small">
+      @helper.form(action = routes.PostController.submit) {
+          @inputText(
+            createPostForm("title"),
+            '_label -> "",
+            '_help -> "",
+            'placeholder -> "title - don't forget you can use html here"
+          )
+          @textarea(
+            createPostForm("body"),
+            '_label -> "",
+            '_help -> "",
+            'placeholder -> "body - don't forget you can use html here, too"
+          )
+          @checkbox(
+            createPostForm("published"),
+            '_label -> "",
+            '_help -> "",
+            '_text -> "Release!"
+          )
+          <div class="actions">
+            <a href="@routes.Application.index" class="btn danger">Abbrechen</a>
+            <input type="submit" class="btn primary" value="Speichern">
+          </div>
+      }
     </div>
 }

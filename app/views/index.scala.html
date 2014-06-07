@@ -1,18 +1,20 @@
 @(posts: List[Post])
 
 @main(Html("wasis.nu/mit<wbr>/blog")) {
-    
     @for(post <- posts) {
         <h2>@Html(post.title)</h2>
         <span class="pull-right">Created: @formatJoda(post.created) | Edited: @formatJoda(post.edited) | Id: @post.id</span>
         <p>@Html(post.body)</p>
-        @helper.form(action = routes.Application.removePost) {
-          <div class="actions">
-            <input type="hidden" name="postId" value="@post.id">
-            <input type="submit" class="btn danger" value="Eintrag löschen">
-          </div>
-        }
+        <div class="actions">
+          @helper.form(action = routes.Application.removePost) {
+              <input type="hidden" name="postId" value="@post.id">
+              <input type="submit" class="btn danger" value="Eintrag löschen">
+          }
+          @helper.form(action = routes.EditPostController.editExistingPost(post.id.get)) {
+              <input type="hidden" name="postId" value="@post.id">
+              <input type="submit" class="btn" value="Eintrag bearbeiten">
+          }
+        </div>
         <hr>
     }
-    
 }

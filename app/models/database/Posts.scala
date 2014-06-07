@@ -7,7 +7,7 @@ import models.Post
 import org.joda.time.DateTime
 
 class Posts(tag: Tag) extends Table[Post](tag, "post") {
-  def id = column[Long]("id", O.PrimaryKey, O.AutoInc) // This is the primary key column
+  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def title = column[String]("title", O.DBType("text"))
   def body = column[String]("body", O.DBType("text"))
   def created = column[DateTime]("date")
@@ -21,12 +21,24 @@ object Posts {
   val posts = TableQuery[Posts]
   
   def findAll()(implicit s: Session) = {
-    //posts.list
     posts.sortBy(p => p.created.desc).list
+  }
+  
+  def findAllPublished()(implicit s: Session) = {
+	  posts.sortBy(p => p.created.desc).filter(_.published === true).list
+  }
+  
+  def find(postId: Long)(implicit s: Session): Post = {
+    (posts filter(_.id === postId)).first
   }
   
   def insert(post: Post)(implicit s: Session) {
     posts.insert(post)
+  }
+  
+  def update(post: Post)(implicit s: Session) {
+    posts.filter(_.id === post.id) update(post)
+    //posts.update(post)
   }
   
   def delete(postId: Long)(implicit s: Session) {

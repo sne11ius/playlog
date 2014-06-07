@@ -1,0 +1,34 @@
+@(editPostForm: Form[Post], post: Post)
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@title = {
+  Beitrag Bearbeiten
+}
+
+@main(title, nav = "edit") {
+  @helper.form(action = routes.EditPostController.updateExistingPost(post.id.get)) {
+    @inputText(
+      editPostForm("title"),
+      '_label -> "",
+      '_help -> ""
+    )
+    @textarea(
+      editPostForm("body"),
+      '_label -> "",
+      '_help -> "",
+      'placeholder -> "body - don't forget you can use html here, too"
+    )
+    @checkbox(
+      editPostForm("published"),
+      '_label -> "",
+      '_help -> "",
+      '_text -> "Release!"
+    )
+    <div class="actions">
+      <a href="@routes.Application.index" class="btn danger">Abbrechen</a>
+      <input type="submit" class="btn primary" value="Speichern">
+    </div>
+  }
+}
