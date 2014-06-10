@@ -7,12 +7,11 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-slick" % "0.6.0.1",
   "mysql" % "mysql-connector-java" % "5.1.23",
   "com.github.tototoshi" %% "slick-joda-mapper" % "1.1.0",
-  "ws.securesocial" %% "securesocial" % "2.1.3"
+  "com.mohiva" %% "play-silhouette" % "1.0-SNAPSHOT",
+  "com.google.inject" % "guice" % "4.0-beta",
+  "net.codingwell" %% "scala-guice" % "4.0.0-beta"
 )
 
-resolvers += Resolver.url(
-  "SBT Plugin Releases",
-  url("http://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/")
-)(Resolver.ivyStylePatterns)
+resolvers += "Sonatype Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 
 play.Project.playScalaSettings

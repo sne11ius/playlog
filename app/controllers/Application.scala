@@ -11,8 +11,13 @@ import play.api.db.slick._
 import play.api.db.slick.Config.driver.simple._
 import play.api.data._
 import play.api.data.Forms._
+import javax.inject.Inject
+import com.mohiva.play.silhouette.core.Environment
+import com.mohiva.play.silhouette.contrib.services.CachedCookieAuthenticator
+import com.mohiva.play.silhouette.core.Silhouette
 
-object Application extends Controller {
+class Application @Inject() (implicit val env: Environment[User, CachedCookieAuthenticator])
+    extends Controller with Silhouette[User, CachedCookieAuthenticator] {
   
   def setup = DBAction { implicit rs =>
     Ok(views.html.setup.step0())
