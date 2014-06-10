@@ -36,6 +36,16 @@ class Application @Inject() (implicit val env: Environment[User, CachedCookieAut
       Ok(views.html.index(Posts.findAllPublished))
     }
   }
+  
+  def removeAll = DBAction { implicit rs => {
+      Posts.findAll.toList.map(post => {
+        if (!post.id.isEmpty) {
+          Posts.delete(post.id.get)
+        }
+      })
+      Ok(views.html.index(Posts.findAll))
+    }
+  }
 
   def removePost = DBAction { implicit rs => {
       val postId = Form("postId" -> text).bindFromRequest.get.toLong
