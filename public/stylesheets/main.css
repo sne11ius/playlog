@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 /** Fonts *********************************************************************/
-* {
+.content * {
 	font-family: 'Vollkorn', serif;
 }
 
@@ -9,8 +9,15 @@ pre, pre *, code, code *, .tooltip, .tooltip * {
 	font-size: 12px;
 }
 
-/** Fix header hiding content *************************************************/
 body {
+    padding-top: 50px;
+}
+
+form {
+    display: inline-block;	
+}
+/** Fix header hiding content *************************************************/
+/*body {
 	padding-top: 70px;
 	padding-bottom: 30px;
 }
@@ -35,3 +42,4 @@ body {
 [action="/compose"] .danger {
 	height: 15px;
 }
+*/
