@@ -1,8 +1,8 @@
-@(posts: List[Post])(implicit env: com.mohiva.play.silhouette.core.Environment[User, _], request: RequestHeader)
+@(posts: List[Post], user: Option[User] = None)(implicit env: com.mohiva.play.silhouette.core.Environment[User, _], request: RequestHeader)
 
 @import com.mohiva.play.silhouette.core.providers._
 
-@main(Html("wasis.nu/mit<wbr>/blog")) {
+@main(Html("wasis.nu/mit<wbr>/blog"), "", user) {
     @for(post <- posts) {
         <span class="pull-right">
 	        @defining(env.providers.values.filter(_.isInstanceOf[SocialProvider[_]])) { providers =>

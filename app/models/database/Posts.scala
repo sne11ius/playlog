@@ -38,10 +38,17 @@ object Posts {
   
   def update(post: Post)(implicit s: Session) {
     posts.filter(_.id === post.id) update(post)
-    //posts.update(post)
   }
   
   def delete(postId: Long)(implicit s: Session) {
     (posts filter(_.id === postId)).delete
+  }
+  
+  def deleteAll()(implicit s: Session) {
+    findAll.toList.map(post => {
+	  if (!post.id.isEmpty) {
+	    Posts.delete(post.id.get)
+	  }
+	})
   }
 }

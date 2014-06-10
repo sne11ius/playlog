@@ -28,4 +28,4 @@ GET         /authenticate/:provider          @controllers.SocialAuthController.a
 #POST        /signUp                          @controllers.SignUpController.signUp
 
 # Setup
-GET /setup                           @controllers.Application.setup
+#GET /setup                           @controllers.Application.setup
