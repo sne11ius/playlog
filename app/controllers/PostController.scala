@@ -52,20 +52,12 @@ object PostController extends Controller {
   def importPosts = DBAction { implicit rs =>
     implicit val postReads: Reads[Post] = (
         Reads.pure(None) and
-<<<<<<< HEAD
         (__ \ "title").read[String] and
         (__ \ "body").read[String] and
         (__ \ "date").read[DateTime] and
         (__ \ "date").read[DateTime] and
         Reads.pure(true) and
         Reads.pure("anon author")
-=======
-		(__ \ "title").read[String] and
-		(__ \ "body").read[String] and
-		(__ \ "date").read[DateTime] and
-		(__ \ "date").read[DateTime] and
-		Reads.pure(false) and
-		Reads.pure("anon author")
     )(Post)
     val posts = Json.parse(Form("jsonPosts" -> text).bindFromRequest.get).as[List[Post]]
     posts.map(post => {

@@ -35,6 +35,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     bind[HTTPLayer].to[PlayHTTPLayer]
     bind[IDGenerator].toInstance(new SecureRandomIDGenerator())
     bind[PasswordHasher].toInstance(new BCryptPasswordHasher)
+    //bind[CachedCookieAuthenticator].toInstance(CachedCookieAuthenticaor.)
     bind[EventBus].toInstance(EventBus())
   }
 
