@@ -37,6 +37,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     bind[PasswordHasher].toInstance(new BCryptPasswordHasher)
     //bind[CachedCookieAuthenticator].toInstance(CachedCookieAuthenticaor.)
     bind[EventBus].toInstance(EventBus())
+    bind[controllers.Application]
   }
 
   /**

@@ -18,31 +18,18 @@ import com.mohiva.play.silhouette.core.Silhouette
 import scala.concurrent.Future
 import play.api.Play.current
 import models.database.AdminIdentifiers
+import com.mohiva.play.silhouette.core.exceptions.AccessDeniedException
 
-class Application @Inject() (implicit val env: Environment[User, CachedCookieAuthenticator])
+class AdminController @Inject() (implicit val env: Environment[User, CachedCookieAuthenticator])
     extends Controller with Silhouette[User, CachedCookieAuthenticator] {
   
-  def index = UserAwareAction.async { implicit request =>
+  def index = SecuredAction.async { implicit request =>
     DB.withSession { implicit session =>
-      if (AdminIdentifiers.findAll.isEmpty) {
-        Future.successful(Ok(views.html.plain()))
+      if (AdminIdentifiers.findBySocialId(request.identity.userID).isDefined) {
+        Future.successful(Ok(views.html.admin(request.identity)))
       } else {
-    	Future.successful(Ok(views.html.index(Posts.findAllPublished, request.identity)))
+        throw new AccessDeniedException("You are not an admin!!!!")
       }
-    }
-  }
-  
-  def removeAll = SecuredAction.async { implicit request =>
-    DB.withSession { implicit session =>
-      Posts.deleteAll
-      Future.successful(Redirect(routes.Application.index))
-    }
-  }
-  
-  def removePost = DBAction { implicit rs => {
-      val postId = Form("postId" -> text).bindFromRequest.get.toLong
-      Posts.delete(postId)
-      Redirect(routes.Application.index)
     }
   }
 }

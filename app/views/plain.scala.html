@@ -1,25 +1,39 @@
-@(title: Html, nav: String = "")(content: Html)
+@()(implicit env: com.mohiva.play.silhouette.core.Environment[User, _], request: RequestHeader)
+
+@import com.mohiva.play.silhouette.core.providers._
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>wasis.nu/mit/blog?setup=true</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")">
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <link href='http://fonts.googleapis.com/css?family=Vollkorn' rel='stylesheet' type='text/css'/>
-        <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
-        <script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
-    </head>
-    <body>
-        <div class="container">
-            <div class="content">
-                <div class="row">
-                    <div class="span14">
-                        @content
-                    </div>
-                </div>
+<head>
+  <title>wasis.nu/mit/blog?setup=true</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+  <link rel="stylesheet" href="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.css"))">
+  <link rel="stylesheet" href="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap-theme.min.css"))">
+  <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+  <link href='http://fonts.googleapis.com/css?family=Vollkorn' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+</head>
+<body>
+	<div class="container">
+		<div class="content">
+			<div class="dwell">
+			  This playlog installation has not been claimed yet. Log in to become the initial administrator.
+			  @defining(env.providers.values.filter(_.isInstanceOf[SocialProvider[_]])) { providers =>
+          @if(!providers.isEmpty) {
+            <div class="col-md-6 col-md-offset-3">
+              <p>Or use your existing account on one of the following services to sign in:</p>
+              <div>
+              @for(p <- providers) {
+                <a href="@routes.SocialAuthController.authenticate(p.id)"><img src="@routes.Assets.at(s"images/providers/${p.id}.png")" style="width:60px;height:60px;"></a>
+              }
+              </div>
             </div>
-        </div>
-    </body>
+          }
+        }
+			</div>
+		</div>
+	</div>
+</body>
 </html>
