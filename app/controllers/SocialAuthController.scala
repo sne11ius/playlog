@@ -16,6 +16,7 @@ import play.api.db.slick._
 import play.api.Play.current
 import models.database.AdminIdentifiers
 import models.AdminIdentifier
+import models.database.Users
 
 /**
  * The social auth controller.
@@ -49,11 +50,11 @@ class SocialAuthController @Inject() (
           maybeAuthenticator match {
             case Some(authenticator) =>
               Logger.debug("User logged in: " + user.fullName)
-              Logger.debug("With UUID: " + user.userID)
+              Logger.debug("With UUID: " + user.id)
               DB.withSession { implicit session =>
                 if (AdminIdentifiers.findAll.isEmpty) {
-                  Logger.debug("We've got a new admin: " + user.fullName.get)
-                  AdminIdentifiers.insert(AdminIdentifier(None, user.userID))
+                  Logger.debug("We've got a new admin: " + user.fullName)
+                  AdminIdentifiers.insert(AdminIdentifier(None, user.id.get))
                 }
               }
               env.eventBus.publish(LoginEvent(user, request, lang))

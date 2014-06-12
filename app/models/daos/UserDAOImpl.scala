@@ -37,7 +37,7 @@ class UserDAOImpl extends UserDAO {
    * @return The saved user.
    */
   def save(user: User) = {
-    users += (user.userID -> user)
+    //users += (user.id -> user)
     Future.successful(user)
   }
 }
