@@ -13,6 +13,7 @@ import utils.di.SilhouetteModule
 import scala.concurrent.Future
 import com.google.inject.Guice
 import controllers.routes
+import models.User
 
 object Global extends GlobalSettings with SecuredSettings with Logger {
   
@@ -40,13 +41,12 @@ object Global extends GlobalSettings with SecuredSettings with Logger {
    * @param lang The currently selected language.
    * @return The result to send to the client.
    */
+  /*
   override def onNotAuthenticated(request: RequestHeader, lang: Lang): Option[Future[SimpleResult]] = {
-    // Some(Future.successful(Redirect(routes.AuthenticationController.signIn)))
-    //Some(controllers.AuthenticationController.signIn)
     Logger.error("Not authenticated D:")
     None
   }
-  
+  */  
   override def onStart(app: Application) {
     Logger.info("Application has started")
   }
@@ -56,18 +56,6 @@ object Global extends GlobalSettings with SecuredSettings with Logger {
   }
   
   override def onRouteRequest(request: RequestHeader): Option[Handler] = {
-    //println("Executed before every request:" + request.toString)
-    DB.withSession { implicit session =>
-      if (AdminIdentifiers.findAll.isEmpty) {
-        if (!request.path.startsWith("/assets") && !request.path.startsWith("/setup")) {
-          //Logger.error("Cannot do this D:")
-          //Logger.debug(request.path)
-          //Logger.error(request.toString)
-          //Logger.info("Setup not yet done. Redirecting to setup.")
-          //return Some(controllers.Application.setup)
-        }
-      }
-	}
     super.onRouteRequest(request)
   }
 }

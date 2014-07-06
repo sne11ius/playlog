@@ -11,6 +11,11 @@ import com.mohiva.play.silhouette.core.services.AuthInfoService
 import com.mohiva.play.silhouette.contrib.services.CachedCookieAuthenticator
 import service.UserService
 import models.User
+import play.api.Logger
+import play.api.db.slick._
+import play.api.Play.current
+import models.database.AdminIdentifiers
+import models.AdminIdentifier
 
 /**
  * The social auth controller.
@@ -43,7 +48,15 @@ class SocialAuthController @Inject() (
         } yield {
           maybeAuthenticator match {
             case Some(authenticator) =>
-              env.eventBus.publish(LoginEvent(user, request, lang))
+              Logger.debug("User logged in: " + user.fullName)
+              Logger.debug("With UUID: " + user.userID)
+              DB.withSession { implicit session =>
+                if (AdminIdentifiers.findAll.isEmpty) {
+                  Logger.debug("We've got a new admin: " + user.fullName)
+                  AdminIdentifiers.insert(AdminIdentifier(None, user.userID.toString()))
+                }
+              }
+              env.eventBus.publish(LoginEvent(user, request, request2lang))
               env.authenticatorService.send(authenticator, Redirect(routes.Application.index))
             case None => throw new AuthenticationException("Couldn't create an authenticator")
           }

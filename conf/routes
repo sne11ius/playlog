@@ -1,6 +1,8 @@
 # Home page
 GET     /                            @controllers.Application.index
 
+GET /admin                           @controllers.AdminController.index
+
 # Edit existing post
 GET     /editPost/:postId            controllers.EditPostController.editExistingPost(postId: Long)
 POST    /editPost/:postId            controllers.EditPostController.updateExistingPost(postId: Long)
@@ -26,6 +28,3 @@ GET         /signOut                         @controllers.AuthenticationControll
 GET         /authenticate/:provider          @controllers.SocialAuthController.authenticate(provider)
 #POST        /authenticate/credentials        @controllers.CredentialsAuthController.authenticate
 #POST        /signUp                          @controllers.SignUpController.signUp
-
-# Setup
-#GET /setup                           @controllers.Application.setup
