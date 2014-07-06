@@ -27,10 +27,10 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
    */
   def configure() {
     bind[UserService].to[UserServiceImpl]
-    bind[UserDAO].to[UserDAOImpl]
-    bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoDAO]
-    bind[DelegableAuthInfoDAO[OAuth1Info]].to[OAuth1InfoDAO]
-    bind[DelegableAuthInfoDAO[OAuth2Info]].to[OAuth2InfoDAO]
+    bind[UserDAO].to[UserDAOSlick]
+    bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoDAOSlick]
+    bind[DelegableAuthInfoDAO[OAuth1Info]].to[OAuth1InfoDAOSlick]
+    bind[DelegableAuthInfoDAO[OAuth2Info]].to[OAuth2InfoDAOSlick]
     bind[CacheLayer].to[PlayCacheLayer]
     bind[HTTPLayer].to[PlayHTTPLayer]
     bind[IDGenerator].toInstance(new SecureRandomIDGenerator())
@@ -104,7 +104,6 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     passwordInfoDAO: DelegableAuthInfoDAO[PasswordInfo],
     oauth1InfoDAO: DelegableAuthInfoDAO[OAuth1Info],
     oauth2InfoDAO: DelegableAuthInfoDAO[OAuth2Info]): AuthInfoService = {
-
     new DelegableAuthInfoService(passwordInfoDAO, oauth1InfoDAO, oauth2InfoDAO)
   }
 
@@ -125,10 +124,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
    * @return The credentials provider.
    */
   @Provides
-  def provideCredentialsProvider(
-    authInfoService: AuthInfoService,
-    passwordHasher: PasswordHasher): CredentialsProvider = {
-
+  def provideCredentialsProvider(authInfoService: AuthInfoService, passwordHasher: PasswordHasher): CredentialsProvider = {
     new CredentialsProvider(authInfoService, passwordHasher, Seq(passwordHasher))
   }
 

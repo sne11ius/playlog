@@ -56,7 +56,7 @@ class AuthenticationController @Inject() (implicit val env: Environment[User, Ca
    * @return The result to display.
    */
   def signOut = SecuredAction.async { implicit request =>
-    env.eventBus.publish(LogoutEvent(request.identity, request, lang))
+    env.eventBus.publish(LogoutEvent(request.identity, request, request2lang))
     Future.successful(env.authenticatorService.discard(Redirect(routes.Application.index)))
   }
 }

@@ -25,7 +25,7 @@ class AdminController @Inject() (implicit val env: Environment[User, CachedCooki
   
   def index = SecuredAction.async { implicit request =>
     DB.withSession { implicit session =>
-      if (AdminIdentifiers.findBySocialId(request.identity.id).isDefined) {
+      if (AdminIdentifiers.findByUserId(request.identity.userID).isDefined) {
         Future.successful(Ok(views.html.admin(request.identity)))
       } else {
         throw new AccessDeniedException("You are not an admin!!!!")
