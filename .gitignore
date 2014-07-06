@@ -9,3 +9,10 @@ activator*
 .settings
 /logs
 /.history
+/nbproject
+/build/
+genfiles.properties
+project.properties
+build.xml
+build-impl.xml
+manifest.mf
