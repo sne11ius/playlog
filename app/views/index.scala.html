@@ -16,16 +16,22 @@
     <h2>@Html(post.title)</h2>
     <span class="pull-right">Created: @formatJoda(post.created) | Edited: @formatJoda(post.edited) | Id: @post.id</span>
     <p>@Html(post.body)</p>
-    <div class="form-group">
-      @helper.form(action = routes.Application.removePost) {
-        <input type="hidden" name="postId" value="@post.id">
-        <button id="submit" type="submit" value="submit" class="btn btn-danger">Eintrag löschen</button>
+    @user.map { u =>
+      @if(u.isAdmin) {
+        <div class="form-group">
+          @helper.form(action = routes.Application.removePost) {
+            <input type="hidden" name="postId" value="@post.id">
+            <button id="submit" type="submit" value="submit" class="btn btn-danger">Eintrag löschen</button>
+          }
+          @helper.form(action = routes.EditPostController.editExistingPost(post.id.get)) {
+            <input type="hidden" name="postId" value="@post.id">
+            <button id="submit" type="submit" value="submit" class="btn btn-primary">Eintrag bearbeiten</button>
+          }
+        </div>
       }
-      @helper.form(action = routes.EditPostController.editExistingPost(post.id.get)) {
-        <input type="hidden" name="postId" value="@post.id">
-        <button id="submit" type="submit" value="submit" class="btn btn-primary">Eintrag bearbeiten</button>
-      }
-    </div>
+    }.getOrElse {
+      <div class="well well-small">You are not signed in and cannot do anything.</div>
+    }
     <hr>
   }
 }
