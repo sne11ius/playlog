@@ -3,12 +3,12 @@
 .cache
 .classpath
 .project
-project
 target
 activator*
 .settings
 /logs
 /.history
+# netbeans project
 /nbproject
 /build/
 genfiles.properties
