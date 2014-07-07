@@ -33,4 +33,9 @@ trait UserDAO {
    * @return The saved user.
    */
   def save(user: User): Future[User]
+  
+  /**
+   * Find all Users and return a map UserId => User
+   */
+  def findAll(): Map[String, User]
 }

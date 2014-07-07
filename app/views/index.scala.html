@@ -1,4 +1,4 @@
-@(posts: List[Post], user: Option[User] = None)(implicit env: com.mohiva.play.silhouette.core.Environment[User, _], request: RequestHeader)
+@(posts: List[Post], users: Map[String, User], user: Option[User] = None)(implicit env: com.mohiva.play.silhouette.core.Environment[User, _], request: RequestHeader)
 
 @import com.mohiva.play.silhouette.core.providers._
 
@@ -14,7 +14,7 @@
       }
     </span>
     <h2>@Html(post.title)</h2>
-    <span class="pull-right">Created: @formatJoda(post.created) | Edited: @formatJoda(post.edited) | Id: @post.id</span>
+    <span class="pull-right">Created: @formatJoda(post.created) | Edited: @formatJoda(post.edited) | Id: @post.id | Author: @users(post.authorId).fullName | <img style="width:20px" src="@users(post.authorId).avatarURL"></span>
     <p>@Html(post.body)</p>
     @user.map { u =>
       @if(u.isAdmin) {

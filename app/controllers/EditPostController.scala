@@ -51,7 +51,7 @@ object EditPostController extends Controller {
 	      existingPost.created,
 	      new DateTime,
 	      editedPost.published,
-	      existingPost.author
+	      existingPost.authorId
 	    )
 	    Posts.update(mergedPost)
         Ok(html.editPost(editPostForm.fill(mergedPost), mergedPost))

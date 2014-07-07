@@ -27,4 +27,9 @@ trait UserService extends IdentityService[User] {
    * @return The user for whom the profile was saved.
    */
   def save[A <: AuthInfo](profile: CommonSocialProfile[A]): Future[User]
+  
+  /**
+   * Find all Users and return a map UserId => User
+   */
+  def findAll(): Map[String, User]
 }
