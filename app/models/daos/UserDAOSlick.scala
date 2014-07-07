@@ -9,6 +9,7 @@ import scala.concurrent.Future
 import java.util.UUID
 import play.Logger
 import models.daos.UserDAO
+import models.database.AdminIdentifiers
 
 /**
  * Give access to the user object using Slick
@@ -34,7 +35,8 @@ class UserDAOSlick extends UserDAO {
               case Some(userLoginInfo) =>
                 slickUsers.filter(_.id === userLoginInfo.userID).firstOption match {
                   case Some(user) =>
-                    Some(User(UUID.fromString(user.userID), loginInfo, user.firstName, user.lastName, user.fullName, user.email, user.avatarURL))
+                    val isAdmin = AdminIdentifiers.findByUserId(UUID.fromString(user.userID)).isDefined
+                    Some(User(UUID.fromString(user.userID), loginInfo, user.firstName, user.lastName, user.fullName, user.email, user.avatarURL, isAdmin))
                   case None => None
                 }
               case None => None
@@ -62,7 +64,8 @@ class UserDAOSlick extends UserDAO {
               case Some(info) =>
                 slickLoginInfos.filter(_.id === info.loginInfoId).firstOption match {
                   case Some(loginInfo) =>
-                    Some(User(UUID.fromString(user.userID), LoginInfo(loginInfo.providerID, loginInfo.providerKey), user.firstName, user.lastName, user.fullName, user.email, user.avatarURL))
+                    val isAdmin = AdminIdentifiers.findByUserId(UUID.fromString(user.userID)).isDefined
+                    Some(User(UUID.fromString(user.userID), LoginInfo(loginInfo.providerID, loginInfo.providerKey), user.firstName, user.lastName, user.fullName, user.email, user.avatarURL, isAdmin))
                   case None => None
                 }
               case None => None

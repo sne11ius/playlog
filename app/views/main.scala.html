@@ -31,16 +31,18 @@
 					<li><a href="https://github.com/sne11ius/playlog">GitHub</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li class="@("active".when(nav == "compose"))">
-              <a href="@routes.PostController.form">Beitrag erstellen</a>
-          </li>
-          <li class="@("active".when(nav == "import"))">
-              <a href="@routes.PostController.importPosts">Beiträge importieren</a>
-          </li>
-          <li style="background-color: red;">
-              <a href="@routes.Application.removeAll">Alle Beiträge löschen</a>
-          </li>
 					@user.map { u =>
+            @if(u.isAdmin) {
+              <li class="@("active".when(nav == "compose"))">
+                <a href="@routes.PostController.form">Beitrag erstellen</a>
+              </li>
+              <li class="@("active".when(nav == "import"))">
+                  <a href="@routes.PostController.importPosts">Beiträge importieren</a>
+              </li>
+              <li style="background-color: red;">
+                  <a href="@routes.Application.removeAll">Alle Beiträge löschen</a>
+              </li>
+            }
 					  <li><a href="@routes.Application.index">@u.fullName</a></li>
 					  <li><a href="@routes.AuthenticationController.signOut">Sign Out</a></li>
 					}.getOrElse {
