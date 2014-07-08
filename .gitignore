@@ -3,6 +3,7 @@
 .cache
 .classpath
 .project
+project/project
 target
 project/target
 activator*
