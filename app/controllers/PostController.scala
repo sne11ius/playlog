@@ -94,17 +94,20 @@ class PostController @Inject() (userDAO: UserDAO, implicit val env: Environment[
       _ => {
         DB withSession { implicit session =>
           val p = createPostForm.bindFromRequest.get
-          userDAO.find(request.identity.userID) onSuccess {
+          Logger.debug("Did bind post from form")
+          userDAO.find(request.identity.userID) andThen {
             case user => {
-              if (user.get.isAdmin) {
-                val post = Post(None, p.title, p.body, p.created, p.edited, p.published, user.get.userID.toString())
+              Logger.debug("Found user")
+              if (user.get.get.isAdmin) {
+                Logger.debug("User is admin")
+                val post = Post(None, p.title, p.body, p.created, p.edited, p.published, user.get.get.userID.toString())
                 Posts.insert(post)
                 Logger.debug("post added")
-                Future.successful(Ok(html.composepost.summary(post)))
+                Future.successful(Redirect(routes.Application.index))
               }
             }
           }
-          Future.successful(Unauthorized("No access"))
+          Future.successful(Redirect(routes.Application.index))
         }
       }
     )
