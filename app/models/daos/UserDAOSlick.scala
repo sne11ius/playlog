@@ -117,7 +117,8 @@ class UserDAOSlick extends UserDAO {
     DB withSession { implicit session =>
       val result = collection.mutable.Map[String, User]()
       slickUsers.list.foreach(user => {
-        find(UUID.fromString(user.userID)) onSuccess {
+        // Blocking here to reduze future hazzle
+        find(UUID.fromString(user.userID)) map {
           case u => result(u.get.userID.toString()) = u.get
         }
       })
