@@ -6,7 +6,6 @@ import views._
 import play.api.db.slick.DBAction
 import models.database.Posts
 import models._
-import play.api._
 import play.api.db.slick._
 import play.api.db.slick.Config.driver.simple._
 import play.api.data._
@@ -18,8 +17,9 @@ import com.mohiva.play.silhouette.core.Silhouette
 import scala.concurrent.Future
 import play.api.Play.current
 import models.database.AdminIdentifiers
+import service.UserService
 
-class Application @Inject() (implicit val env: Environment[User, CachedCookieAuthenticator])
+class Application @Inject() (userService: UserService, implicit val env: Environment[User, CachedCookieAuthenticator])
     extends Controller with Silhouette[User, CachedCookieAuthenticator] {
   
   def index = UserAwareAction.async { implicit request =>
@@ -27,7 +27,7 @@ class Application @Inject() (implicit val env: Environment[User, CachedCookieAut
       if (AdminIdentifiers.findAll.isEmpty) {
         Future.successful(Ok(views.html.plain()))
       } else {
-    	Future.successful(Ok(views.html.index(Posts.findAllPublished, request.identity)))
+    	  Future.successful(Ok(views.html.index(Posts.findAllPublished, userService.findAll, request.identity)))
       }
     }
   }

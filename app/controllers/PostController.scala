@@ -17,8 +17,16 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import javax.inject.Inject
+import com.mohiva.play.silhouette.core.Environment
+import com.mohiva.play.silhouette.contrib.services.CachedCookieAuthenticator
+import com.mohiva.play.silhouette.core.Silhouette
+import scala.concurrent.Future
+import models.daos.UserDAO
+import scala.concurrent.ExecutionContext.Implicits.global
 
-object PostController extends Controller {
+class PostController @Inject() (userDAO: UserDAO, implicit val env: Environment[User, CachedCookieAuthenticator])
+    extends Controller with Silhouette[User, CachedCookieAuthenticator] {
   
   val createPostForm: Form[Post] = Form(
     mapping(
@@ -49,7 +57,7 @@ object PostController extends Controller {
     Ok(html.importposts.importPosts())
   }
   
-  def importPosts = DBAction { implicit rs =>
+  def importPosts = UserAwareAction.async { implicit request =>
     implicit val postReads: Reads[Post] = (
         Reads.pure(None) and
         (__ \ "title").read[String] and
@@ -57,32 +65,50 @@ object PostController extends Controller {
         (__ \ "date").read[DateTime] and
         (__ \ "date").read[DateTime] and
         Reads.pure(true) and
-        Reads.pure("anon author")
+        Reads.pure(request.identity.get.userID.toString())
     )(Post)
     val posts = Json.parse(Form("jsonPosts" -> text).bindFromRequest.get).as[List[Post]]
-    posts.map(post => {
-      println(post)
-      Posts.insert(post)
-    })
-    Ok(html.importposts.importPosts())
+    
+    DB withSession { implicit session =>
+      posts.map(post => {
+        println(post)
+        Posts.insert(post)
+      })
+    }
+    Future.successful(Ok(html.importposts.importPosts()))
   }
   
-  def editPost = DBAction { implicit rs =>
-    val postId = Form("postId" -> text).bindFromRequest.get.toLong
-    val post = Posts.find(postId)
-    Ok(html.composepost.form(createPostForm.fill(post)))
+  def editPost = UserAwareAction.async { implicit request =>
+    DB withSession { implicit session =>
+      val postId = Form("postId" -> text).bindFromRequest.get.toLong
+      val post = Posts.find(postId)
+      Future.successful(Ok(html.composepost.form(createPostForm.fill(post))))
+    }
   }
   
-  def submit = DBAction { implicit rs =>
+  def submit = SecuredAction.async { implicit request =>
     createPostForm.bindFromRequest.fold(
       formWithErrors => {
-        BadRequest(views.html.composepost.form(formWithErrors))
+        Future.successful(BadRequest(views.html.composepost.form(formWithErrors)))
       },
       _ => {
-        val post = createPostForm.bindFromRequest.get
-        Posts.insert(post)
-        Logger.debug("post added")
-        Ok(html.composepost.summary(post))
+        DB withSession { implicit session =>
+          val p = createPostForm.bindFromRequest.get
+          Logger.debug("Did bind post from form")
+          userDAO.find(request.identity.userID) andThen {
+            case user => {
+              Logger.debug("Found user")
+              if (user.get.get.isAdmin) {
+                Logger.debug("User is admin")
+                val post = Post(None, p.title, p.body, p.created, p.edited, p.published, user.get.get.userID.toString())
+                Posts.insert(post)
+                Logger.debug("post added")
+                Future.successful(Redirect(routes.Application.index))
+              }
+            }
+          }
+          Future.successful(Redirect(routes.Application.index))
+        }
       }
     )
   }

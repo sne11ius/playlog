@@ -22,8 +22,8 @@ class Posts(tag: Tag) extends Table[DBPost](tag, "post") {
   def created = column[Long]("date")
   def edited = column[Long]("edited")
   def published = column[Boolean]("published")
-  def author = column[String]("author")
-  def * = (id.?, title, body, created, edited, published, author) <> (DBPost.tupled, DBPost.unapply)
+  def authorId = column[String]("authorId", O.NotNull)
+  def * = (id.?, title, body, created, edited, published, authorId) <> (DBPost.tupled, DBPost.unapply)
 }
 
 object Posts {
@@ -43,11 +43,11 @@ object Posts {
   }
   
   def insert(post: Post)(implicit s: Session) {
-    posts.insert(DBPost(post.id, post.title, post.body, post.created.getMillis(), post.edited.getMillis(), post.published, post.author))
+    posts.insert(DBPost(post.id, post.title, post.body, post.created.getMillis(), post.edited.getMillis(), post.published, post.authorId))
   }
   
   def update(post: Post)(implicit s: Session) {
-    posts.filter(_.id === post.id) update(DBPost(post.id, post.title, post.body, post.created.getMillis(), post.edited.getMillis(), post.published, post.author))
+    posts.filter(_.id === post.id) update(DBPost(post.id, post.title, post.body, post.created.getMillis(), post.edited.getMillis(), post.published, post.authorId))
   }
   
   def delete(postId: Long)(implicit s: Session) {

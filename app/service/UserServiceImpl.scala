@@ -65,4 +65,8 @@ class UserServiceImpl @Inject() (userDAO: UserDAO) extends UserService {
         ))
     }
   }
+  
+  def findAll(): Map[String, User] = {
+    userDAO.findAll()
+  }
 }
