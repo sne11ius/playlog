@@ -16,30 +16,14 @@ body {
 form {
     display: inline-block;	
 }
-/** Fix header hiding content *************************************************/
-/*body {
-	padding-top: 70px;
-	padding-bottom: 30px;
+
+.userlist {
+	border: 1px solid #888;
+	cellspacing: 3px;
+	cellpaddin
 }
 
-[action="/compose"] .actions {
-	padding-left: 0;
-	text-align: right;
+.userlist th, .userlist td {
+  padding: 8px;
+  border: 1px dashed #aaa;
 }
-
-[action="/compose"] .input {
-	margin-left: 0;
-}
-
-[action="/compose"] [type="text"], [action="/compose"] textarea {
-	width: 100%;
-}
-
-[action="/compose"] label {
-	display: none;
-}
-
-[action="/compose"] .danger {
-	height: 15px;
-}
-*/
