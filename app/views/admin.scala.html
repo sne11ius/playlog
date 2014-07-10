@@ -1,11 +1,11 @@
 @(users: Map[String, User], user: User)(implicit env: com.mohiva.play.silhouette.core.Environment[User, _], request: RequestHeader)
 
 @main(Html("Admin"), "", Some(user)) {
-  <h1>Wooot! Admin Page!</h1>
+  <p>This is just a simple list. There is nothing you can do here.</p>
   <table class="userlist">
     <tr>
       <th>id</th>
-      <th>loginInfo</th>
+      <th>provider</th>
       <th>first name</th>
       <th>last name</th>
       <th>email</th>
@@ -15,17 +15,13 @@
 	  @for(user <- users map (_._2)) {
 	    <tr>
 	      <td>@user.userID</td>
-	      <td>@user.loginInfo</td>
+	      <td>@user.loginInfo.providerID</td>
 	      <td>@user.firstName</td>
 	      <td>@user.lastName</td>
 	      <td>@user.email</td>
 	      <td><img src="@user.avatarURL"></td>
 	      <td>
-	        @if(user.isAdmin) {
-	          yep
-          } else {
-            nope
-          }
+	        <input type="checkbox" @("checked".when(user.isAdmin))>
 	      </td>
 	    </tr>
 	  }
