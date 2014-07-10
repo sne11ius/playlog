@@ -8,7 +8,7 @@ import com.mohiva.play.silhouette.core.LoginInfo
 import scala.concurrent.Future
 import java.util.UUID
 import play.Logger
-import models.daos.UserDAO
+//import models.daos.UserDAO
 import models.database.AdminIdentifiers
 import scala.concurrent.ExecutionContext.Implicits.global
 
