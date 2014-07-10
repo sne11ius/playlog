@@ -23,8 +23,8 @@ GET     /assets/*file                controllers.Assets.at(path="/public", file)
 GET     /webjars/*file                   controllers.WebJarAssets.at(file)
 
 GET         /signIn                          @controllers.AuthenticationController.signIn
-#GET         /signUp                          @controllers.AuthenticationController.signUp
+GET         /signUp                          @controllers.AuthenticationController.signUp
 GET         /signOut                         @controllers.AuthenticationController.signOut
 GET         /authenticate/:provider          @controllers.SocialAuthController.authenticate(provider)
-#POST        /authenticate/credentials        @controllers.CredentialsAuthController.authenticate
-#POST        /signUp                          @controllers.SignUpController.signUp
+POST        /authenticate/credentials        @controllers.CredentialsAuthController.authenticate
+POST        /signUp                          @controllers.SignUpController.signUp

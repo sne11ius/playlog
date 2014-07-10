@@ -1,0 +1,30 @@
+@(signInForm: Form[forms.SignUpForm.Data])(implicit request: RequestHeader)
+
+@import bootstrap._
+@main(Html("wasis.nu/mit<wbr>/blog"), "") {
+  @request.flash.get("error").map { msg =>
+    <div class="alert alert-danger alert-error">
+	    <a href="#" class="close" data-dismiss="alert">&times;</a> <strong>Error!</strong>
+	    @msg
+    </div>
+  }
+  <fieldset>
+		<legend class="">Sign up for a new account</legend>
+		@helper.form(action = routes.SignUpController.signUp()) {
+			@text(signInForm("firstName"), "First name")
+			@text(signInForm("lastName"), "Last name")
+			@text(signInForm("email"), "Email")
+			@password(signInForm("password"), "Password")
+			<div class="form-group">
+				<div class="">
+					<button id="submit" type="submit" value="submit" class="btn btn-primary btn-block">Submit</button>
+				</div>
+			</div>
+			<div class="">
+				<p>
+					Already a member? <a href="@()routes.Application.signIn">Sign in now</a>
+				</p>
+			</div>
+		}
+	</fieldset>
+}
