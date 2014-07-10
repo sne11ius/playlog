@@ -43,10 +43,11 @@
                   <a href="@routes.Application.removeAll">Alle Beiträge löschen</a>
               </li>
             }
-					  <li><a href="@routes.Application.index">@u.fullName</a></li>
+					  <li><a href="#">@u.fullName</a></li>
 					  <li><a href="@routes.AuthenticationController.signOut">Sign Out</a></li>
 					}.getOrElse {
 						<li><a href="@routes.AuthenticationController.signIn">Sign In</a></li>
+						<li><a href="@routes.AuthenticationController.signUp">Sign Up</a></li>
 					}
 				</ul>
 			</nav>

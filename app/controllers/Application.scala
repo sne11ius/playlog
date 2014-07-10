@@ -18,6 +18,7 @@ import scala.concurrent.Future
 import play.api.Play.current
 import models.database.AdminIdentifiers
 import service.UserService
+import forms._
 
 class Application @Inject() (userService: UserService, implicit val env: Environment[User, CachedCookieAuthenticator])
     extends Controller with Silhouette[User, CachedCookieAuthenticator] {
@@ -43,6 +44,18 @@ class Application @Inject() (userService: UserService, implicit val env: Environ
       val postId = Form("postId" -> text).bindFromRequest.get.toLong
       Posts.delete(postId)
       Redirect(routes.Application.index)
+    }
+  }
+  
+    /**
+   * Handles the Sign Up action.
+   *
+   * @return The result to display.
+   */
+  def signUp = UserAwareAction.async { implicit request =>
+    request.identity match {
+      case Some(user) => Future.successful(Redirect(routes.Application.index))
+      case None => Future.successful(Ok(views.html.signUp(SignUpForm.form)))
     }
   }
 }

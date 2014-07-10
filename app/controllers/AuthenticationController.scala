@@ -5,7 +5,7 @@ import com.mohiva.play.silhouette.core.{LogoutEvent, Environment, Silhouette}
 import com.mohiva.play.silhouette.contrib.services.CachedCookieAuthenticator
 import scala.concurrent.Future
 import javax.inject.Inject
-//import forms._
+import forms._
 
 class AuthenticationController @Inject() (implicit val env: Environment[User, CachedCookieAuthenticator])
   extends Silhouette[User, CachedCookieAuthenticator] {
@@ -26,14 +26,10 @@ class AuthenticationController @Inject() (implicit val env: Environment[User, Ca
    * @return The result to display.
    */
   def signIn = UserAwareAction.async { implicit request =>
-    Future.successful(Redirect(routes.Application.index))
-    /*
     request.identity match {
       case Some(user) => Future.successful(Redirect(routes.Application.index))
-      //case None => Future.successful(Ok(views.html.signIn(SignInForm.form)))
-      case None => Future.successful(Ok(views.html.index()))
+      case None => Future.successful(Ok(views.html.signIn(SignInForm.form)))
     }
-    */
   }
 
   /**
@@ -41,14 +37,12 @@ class AuthenticationController @Inject() (implicit val env: Environment[User, Ca
    *
    * @return The result to display.
    */
-  /*
   def signUp = UserAwareAction.async { implicit request =>
     request.identity match {
       case Some(user) => Future.successful(Redirect(routes.Application.index))
       case None => Future.successful(Ok(views.html.signUp(SignUpForm.form)))
     }
   }
-  */
 
   /**
    * Handles the Sign Out action.
