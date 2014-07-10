@@ -10,6 +10,7 @@ import java.util.UUID
 import play.Logger
 import models.daos.UserDAO
 import models.database.AdminIdentifiers
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
  * Give access to the user object using Slick
@@ -86,7 +87,7 @@ class UserDAOSlick extends UserDAO {
     DB withSession { implicit session =>
       Future.successful {
         val dbUser = DBUser(user.userID.toString, user.firstName, user.lastName, user.fullName, user.email, user.avatarURL)
-        slickUsers.where(_.id === dbUser.userID).firstOption match {
+        slickUsers.filter(_.id === dbUser.userID).firstOption match {
           case Some(userFound) => slickUsers.filter(_.id === dbUser.userID).update(dbUser)
           case None => slickUsers.insert(dbUser)
         }
@@ -106,6 +107,23 @@ class UserDAOSlick extends UserDAO {
         }
         user // We do not change the user => return it
       }
+    }
+  }
+  
+  /**
+   * Find all Users and return a map UserId => User
+   */
+  def findAll(): Map[String, User] = {
+    DB withSession { implicit session =>
+      val result = collection.mutable.Map[String, User]()
+      slickUsers.list.foreach(user => {
+        // Blocking here to reduze future hazzle
+        find(UUID.fromString(user.userID)) map {
+          case u => result(u.get.userID.toString()) = u.get
+        }
+      })
+      Logger.debug("Users: " + result)
+      result.toMap
     }
   }
 }

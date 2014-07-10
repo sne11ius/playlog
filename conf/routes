@@ -8,14 +8,14 @@ GET     /editPost/:postId            controllers.EditPostController.editExisting
 POST    /editPost/:postId            controllers.EditPostController.updateExistingPost(postId: Long)
 
 # Posts
-GET     /compose                     controllers.PostController.form
-GET     /users/fakeuser              controllers.PostController.editForm
-POST    /compose                     controllers.PostController.submit
-POST    /importPosts                 controllers.PostController.importPosts
-GET     /importPosts                 controllers.PostController.showImport
+GET     /compose                     @controllers.PostController.form
+GET     /users/fakeuser              @controllers.PostController.editForm
+POST    /compose                     @controllers.PostController.submit
+POST    /importPosts                 @controllers.PostController.importPosts
+GET     /importPosts                 @controllers.PostController.showImport
 POST    /removePost                  @controllers.Application.removePost
 GET     /removeAllPosts              @controllers.Application.removeAll
-POST    /editPost                    controllers.PostController.editPost
+POST    /editPost                    @controllers.PostController.editPost
 
 
 # Map static resources from the /public folder to the /assets URL path

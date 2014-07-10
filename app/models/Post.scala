@@ -10,5 +10,5 @@ case class Post(
   created: DateTime,
   edited: DateTime,
   published: Boolean,
-  author: String
+  authorId: String
 )
