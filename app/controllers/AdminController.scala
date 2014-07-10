@@ -19,14 +19,15 @@ import scala.concurrent.Future
 import play.api.Play.current
 import models.database.AdminIdentifiers
 import com.mohiva.play.silhouette.core.exceptions.AccessDeniedException
+import service.UserService
 
-class AdminController @Inject() (implicit val env: Environment[User, CachedCookieAuthenticator])
+class AdminController @Inject() (userService: UserService, implicit val env: Environment[User, CachedCookieAuthenticator])
     extends Controller with Silhouette[User, CachedCookieAuthenticator] {
   
   def index = SecuredAction.async { implicit request =>
     DB.withSession { implicit session =>
       if (AdminIdentifiers.findByUserId(request.identity.userID).isDefined) {
-        Future.successful(Ok(views.html.admin(request.identity)))
+        Future.successful(Ok(views.html.admin(userService.findAll, request.identity)))
       } else {
         throw new AccessDeniedException("You are not an admin!!!!")
       }
