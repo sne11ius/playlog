@@ -21,7 +21,7 @@
 	      <td>@user.email</td>
 	      <td><img src="@user.avatarURL"></td>
 	      <td>
-	        <input type="checkbox" @("checked".when(user.isAdmin))>
+	        <input type="checkbox" @("checked".when(user.isAdmin)) disabled>
 	      </td>
 	    </tr>
 	  }
