@@ -95,6 +95,27 @@ object DBTableDefinitions {
     def loginInfoId = column[Long]("logininfoid")
     def * = (id.?, accessToken, tokenType, expiresIn, refreshToken, loginInfoId) <> (DBOAuth2Info.tupled, DBOAuth2Info.unapply)
   }
+  
+  case class DBPost(
+    id: Option[Long],
+    title: String,
+    body: String,
+    created: Long,
+    edited: Long,
+    published: Boolean,
+    author: String
+  )
+  
+  class Posts(tag: Tag) extends Table[DBPost](tag, "post") {
+    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+    def title = column[String]("title", O.DBType("text"))
+    def body = column[String]("body", O.DBType("text"))
+    def created = column[Long]("date")
+    def edited = column[Long]("edited")
+    def published = column[Boolean]("published")
+    def authorId = column[String]("authorId", O.NotNull)
+    def * = (id.?, title, body, created, edited, published, authorId) <> (DBPost.tupled, DBPost.unapply)
+  }
 
   val slickUsers = TableQuery[Users]
   val slickLoginInfos = TableQuery[LoginInfos]
@@ -102,5 +123,6 @@ object DBTableDefinitions {
   val slickPasswordInfos = TableQuery[PasswordInfos]
   val slickOAuth1Infos = TableQuery[OAuth1Infos]
   val slickOAuth2Infos = TableQuery[OAuth2Infos]
+  val slickPosts = TableQuery[Posts]
 
 }

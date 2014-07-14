@@ -9,10 +9,19 @@ import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
 import org.joda.time.DateTime
-import models.database.Posts
-import models.Post
+import models.database._
+import models._
+import service._
+import com.mohiva.play.silhouette.core.Environment
+import com.mohiva.play.silhouette.contrib.services.CachedCookieAuthenticator
+import com.mohiva.play.silhouette.core.Silhouette
+import javax.inject.Inject
+import play.api.Play.current
+import scala.concurrent.Future
+import com.mohiva.play.silhouette.core.exceptions.AccessDeniedException
 
-object EditPostController extends Controller {
+class EditPostController @Inject() (userService: UserService, postService: PostService, implicit val env: Environment[User, CachedCookieAuthenticator])
+    extends Controller with Silhouette[User, CachedCookieAuthenticator] {
   
   val editPostForm: Form[Post] = Form(
     // WhyTF can I not have my postId as a Long?
@@ -29,35 +38,49 @@ object EditPostController extends Controller {
     }
   )
   
-  def editExistingPost(postId: Long) = DBAction { implicit rs =>
-    Logger.debug("Editing post by id: " + postId)
-    val post = Posts.find(postId);
-    Ok(html.editPost(editPostForm.fill(post), post))
+  def editExistingPost(postId: Long) = SecuredAction.async { implicit request =>
+    DB.withSession { implicit session =>
+      AdminIdentifiers.findByUserId(request.identity.userID) match {
+        case Some(user) => {
+          Logger.debug("Editing post by id: " + postId)
+          val post = postService.find(postId);
+          Future.successful(Ok(html.editPost(editPostForm.fill(post), post)))
+        }
+        case None => {
+          throw new AccessDeniedException("You are not an admin!!!!")
+        }
+      }
+    }
   }
   
-  def updateExistingPost(postId: Long) = DBAction { implicit rs =>
-    editPostForm.bindFromRequest.fold(
-      error => {
-        Logger.error("the fuck:")
-        Logger.error(error.toString)
-      },
-      editedPost => {
-        Logger.debug("Updating post by id: " + postId)
-        val existingPost = Posts.find(postId)
-	    val mergedPost = Post(
-	      Some(postId),
-	      editedPost.title,
-	      editedPost.body,
-	      existingPost.created,
-	      new DateTime,
-	      editedPost.published,
-	      existingPost.authorId
-	    )
-	    Posts.update(mergedPost)
-        Ok(html.editPost(editPostForm.fill(mergedPost), mergedPost))
+  def updateExistingPost(postId: Long) = SecuredAction.async { implicit request =>
+    DB.withSession { implicit session =>
+      if (!request.identity.isAdmin) {
+        throw new AccessDeniedException("You are not an admin!!!!")
       }
-    )
-    val existingPost = Posts.find(postId)
-    Ok(html.editPost(editPostForm.fill(existingPost), existingPost))
+      editPostForm.bindFromRequest.fold(
+        error => {
+          Logger.error("the fuck:")
+          Logger.error(error.toString)
+        },
+        editedPost => {
+          Logger.debug("Updating post by id: " + postId)
+          val existingPost = postService.find(postId)
+    	  val mergedPost = Post(
+    	    Some(postId),
+    	    editedPost.title,
+    	    editedPost.body,
+    	    existingPost.created,
+    	    new DateTime,
+    	    editedPost.published,
+    	    request.identity
+    	  )
+    	  postService.update(mergedPost)
+          Ok(html.editPost(editPostForm.fill(mergedPost), mergedPost))
+        }
+      )
+      val existingPost = postService.find(postId)
+      Future.successful(Ok(html.editPost(editPostForm.fill(existingPost), existingPost)))
+    }
   }
 }

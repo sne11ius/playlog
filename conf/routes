@@ -4,8 +4,8 @@ GET     /                            @controllers.Application.index
 GET /admin                           @controllers.AdminController.index
 
 # Edit existing post
-GET     /editPost/:postId            controllers.EditPostController.editExistingPost(postId: Long)
-POST    /editPost/:postId            controllers.EditPostController.updateExistingPost(postId: Long)
+GET     /editPost/:postId            @controllers.EditPostController.editExistingPost(postId: Long)
+POST    /editPost/:postId            @controllers.EditPostController.updateExistingPost(postId: Long)
 
 # Posts
 GET     /compose                     @controllers.PostController.form

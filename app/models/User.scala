@@ -24,3 +24,14 @@ case class User(
   avatarURL: Option[String],
   isAdmin: Boolean
 ) extends Identity
+
+object UserStub extends User(
+  UUID.randomUUID(),
+  LoginInfo("", ""),
+  None,
+  None,
+  None,
+  None,
+  None,
+  false
+)

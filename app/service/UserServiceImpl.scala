@@ -2,12 +2,12 @@ package service
 
 import java.util.UUID
 import javax.inject.Inject
+import models.daos.UserDAO
 import play.api.libs.concurrent.Execution.Implicits._
 import com.mohiva.play.silhouette.core.LoginInfo
 import com.mohiva.play.silhouette.core.services.AuthInfo
 import com.mohiva.play.silhouette.core.providers.CommonSocialProfile
 import scala.concurrent.Future
-import models.daos.UserDAO
 import models.User
 
 /**
