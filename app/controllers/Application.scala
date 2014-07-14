@@ -4,8 +4,8 @@ import play.api._
 import play.api.mvc._
 import views._
 import play.api.db.slick.DBAction
-import models.database.Posts
 import models._
+import service.PostService
 import play.api.db.slick._
 import play.api.db.slick.Config.driver.simple._
 import play.api.data._
@@ -20,7 +20,7 @@ import models.database.AdminIdentifiers
 import service.UserService
 import forms._
 
-class Application @Inject() (userService: UserService, implicit val env: Environment[User, CachedCookieAuthenticator])
+class Application @Inject() (userService: UserService, postService: PostService, implicit val env: Environment[User, CachedCookieAuthenticator])
     extends Controller with Silhouette[User, CachedCookieAuthenticator] {
   
   def index = UserAwareAction.async { implicit request =>
@@ -28,21 +28,21 @@ class Application @Inject() (userService: UserService, implicit val env: Environ
       if (AdminIdentifiers.findAll.isEmpty) {
         Future.successful(Ok(views.html.plain()))
       } else {
-    	  Future.successful(Ok(views.html.index(Posts.findAllPublished, userService.findAll, request.identity)))
+    	  Future.successful(Ok(views.html.index(postService.findAllPublished, request.identity)))
       }
     }
   }
   
   def removeAll = SecuredAction.async { implicit request =>
     DB.withSession { implicit session =>
-      Posts.deleteAll
+      postService.deleteAll
       Future.successful(Redirect(routes.Application.index))
     }
   }
   
   def removePost = DBAction { implicit rs => {
       val postId = Form("postId" -> text).bindFromRequest.get.toLong
-      Posts.delete(postId)
+      postService.delete(postId)
       Redirect(routes.Application.index)
     }
   }

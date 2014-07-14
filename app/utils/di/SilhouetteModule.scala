@@ -13,7 +13,7 @@ import com.mohiva.play.silhouette.core.providers.oauth1._
 import com.mohiva.play.silhouette.contrib.utils._
 import com.mohiva.play.silhouette.contrib.services._
 import com.mohiva.play.silhouette.contrib.daos.DelegableAuthInfoDAO
-import service.{UserService, UserServiceImpl}
+import service._
 import models.daos._
 import models.User
 
@@ -27,6 +27,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
    */
   def configure() {
     bind[UserService].to[UserServiceImpl]
+    bind[PostService].to[PostServiceImpl]
     bind[UserDAO].to[UserDAOSlick]
     bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoDAOSlick]
     bind[DelegableAuthInfoDAO[OAuth1Info]].to[OAuth1InfoDAOSlick]
