@@ -116,6 +116,27 @@ object DBTableDefinitions {
     def authorId = column[String]("authorId", O.NotNull)
     def * = (id.?, title, body, created, edited, published, authorId) <> (DBPost.tupled, DBPost.unapply)
   }
+  
+  case class DBComments(
+    id: Option[Long],
+    title: String,
+    body: String,
+    created: Long,
+    edited: Long,
+    author: String,
+    post: Long
+  )
+  
+  class Comments(tag: Tag) extends Table[DBComments](tag, "comment") {
+    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+    def title = column[String]("title", O.DBType("text"))
+    def body = column[String]("body", O.DBType("text"))
+    def created = column[Long]("date")
+    def edited = column[Long]("edited")
+    def authorId = column[String]("authorId", O.NotNull)
+    def postId = column[Long]("postId", O.NotNull)
+    def * = (id.?, title, body, created, edited, authorId, postId) <> (DBComments.tupled, DBComments.unapply)
+  }
 
   val slickUsers = TableQuery[Users]
   val slickLoginInfos = TableQuery[LoginInfos]
@@ -124,5 +145,6 @@ object DBTableDefinitions {
   val slickOAuth1Infos = TableQuery[OAuth1Infos]
   val slickOAuth2Infos = TableQuery[OAuth2Infos]
   val slickPosts = TableQuery[Posts]
+  val slickComments = TableQuery[Comments]
 
 }

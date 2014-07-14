@@ -4,7 +4,6 @@ import play.api._
 import play.api.mvc._
 import views._
 import play.api.db.slick.DBAction
-import models.database.Posts
 import models._
 import play.api._
 import play.api.db.slick._

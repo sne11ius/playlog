@@ -31,7 +31,7 @@ class EditPostController @Inject() (userService: UserService, postService: PostS
       "published" -> boolean
     )
     {
-      (title, body, published) => Post(None, title, body, null, null, published, null) 
+      (title, body, published) => Post(None, title, body, null, null, published, null, List())
     } 
     {
       post => Some(post.title, post.body, post.published)
@@ -73,7 +73,8 @@ class EditPostController @Inject() (userService: UserService, postService: PostS
     	    existingPost.created,
     	    new DateTime,
     	    editedPost.published,
-    	    request.identity
+    	    request.identity,
+    	    existingPost.comments
     	  )
     	  postService.update(mergedPost)
           Ok(html.editPost(editPostForm.fill(mergedPost), mergedPost))
