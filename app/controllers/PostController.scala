@@ -33,7 +33,7 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
       "title" -> nonEmptyText,
       "body" -> nonEmptyText,
       "published" -> boolean) {
-        (title, body, published) => Post(None, title, body, new DateTime, new DateTime, published, UserStub)
+        (title, body, published) => Post(None, title, body, new DateTime, new DateTime, published, UserStub, List())
       } {
         post => Some(post.title, post.body, post.published)
       })
@@ -44,7 +44,8 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
 
   def editForm = Action {
     val existingPost = Post(
-      None, "faketitle", "fakebody", new DateTime, new DateTime, false, UserStub)
+      None, "faketitle", "fakebody", new DateTime, new DateTime, false, UserStub, List()
+    )
     Ok(html.composepost.form(createPostForm.fill(existingPost)))
   }
 
@@ -60,7 +61,8 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
       (__ \ "date").read[DateTime] and
       (__ \ "date").read[DateTime] and
       Reads.pure(true) and
-      Reads.pure(request.identity.get))(Post)
+      Reads.pure(request.identity.get) and
+      Reads.pure(List()))(Post)
     val postsToAdd = Json.parse(Form("jsonPosts" -> text).bindFromRequest.get).as[List[Post]]
 
     DB withSession { implicit session =>
@@ -94,7 +96,7 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
               Logger.debug("Found user")
               if (user.get.get.isAdmin) {
                 Logger.debug("User is admin")
-                val post = Post(None, p.title, p.body, p.created, p.edited, p.published, user.get.get)
+                val post = Post(None, p.title, p.body, p.created, p.edited, p.published, user.get.get, List())
                 postService.insert(post)
                 Logger.debug("post added")
                 Future.successful(Redirect(routes.Application.index))

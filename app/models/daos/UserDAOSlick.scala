@@ -121,7 +121,6 @@ class UserDAOSlick extends UserDAO {
           case u => result(u.get.userID.toString()) = u.get
         }
       })
-      Logger.debug("Users: " + result)
       result.toMap
     }
   }
