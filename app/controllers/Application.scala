@@ -19,6 +19,9 @@ import play.api.Play.current
 import models.database.AdminIdentifiers
 import service.UserService
 import forms._
+import org.joda.time.format.DateTimeFormatter
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.DateTimeZone
 
 class Application @Inject() (userService: UserService, postService: PostService, implicit val env: Environment[User, CachedCookieAuthenticator])
     extends Controller with Silhouette[User, CachedCookieAuthenticator] {
@@ -28,8 +31,15 @@ class Application @Inject() (userService: UserService, postService: PostService,
       if (AdminIdentifiers.findAll.isEmpty) {
         Future.successful(Ok(views.html.plain()))
       } else {
-    	  Future.successful(Ok(views.html.index(postService.findAllPublished(inTitle), request.identity)))
+    	Future.successful(Ok(views.html.index(postService.findAllPublished(inTitle), request.identity)))
       }
+    }
+  }
+  
+  def singlePost(dateString: String, title: String) = UserAwareAction.async { implicit request =>
+    DB.withSession { implicit session =>
+      val date = DateTimeFormat.forPattern("yyyy-MM-dd").parseDateTime(dateString).withZone(DateTimeZone.UTC).withHourOfDay(0)
+      Future.successful(Ok(views.html.index(postService.findSinglePost(date, title), request.identity)))
     }
   }
   
