@@ -3,6 +3,7 @@ package service
 import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.Tag
 import models.Post
+import models.Comment
 import org.joda.time.DateTime
 import javax.inject.Inject
 import models.daos.UserDAO
@@ -22,4 +23,6 @@ trait PostService {
   def delete(postId: Long)
   
   def deleteAll
+  
+  def addComment(postId: Long, comment: Comment)
 }

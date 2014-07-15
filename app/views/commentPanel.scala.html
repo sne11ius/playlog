@@ -1,0 +1,39 @@
+@(post: Post, commentForm: Form[forms.CommentForm.Data], user: Option[User])
+
+@import bootstrap._
+
+<div class="well well-small">
+  <h3>Comments for post #@post.id</h3>
+  @user match {
+    case Some(user) => {
+      <fieldset>
+		    <legend class="">Add a comment</legend>
+		    @helper.form(action = routes.CommentController.addComment()) {
+		      @text(commentForm("title"), "Titel")
+		      @text(commentForm("body"), "Body")
+		      <input type="hidden" name="postId" value="@post.id">
+		      <div class="form-group">
+		        <div class="">
+		          <button id="submit" type="submit" value="submit" class="btn btn-primary btn-block">Absenden</button>
+		        </div>
+		      </div>
+	      }
+      </fieldset>
+    }
+    case None => {
+      <div>Sign in to post a comment.</div>
+    }
+  }
+  @if(post.comments.isEmpty) {
+    <h3>No comments yet</h3>
+  } else {
+    <h3>@post.comments.length Comment@("s".when(post.comments.length > 1)):</h3>
+    @for(comment <- post.comments) {
+      <span class="pull-right">
+        Created: @formatJoda(comment.created) | Edited: @formatJoda(comment.edited) | Id: @comment.id | Author: @comment.author.fullName | <img style="width:20px" src="@comment.author.avatarURL">
+      </span>
+      <h4>@comment.title</h4>
+      <div>@comment.body</div>
+    }
+  }
+</div>

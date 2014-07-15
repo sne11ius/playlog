@@ -117,7 +117,7 @@ object DBTableDefinitions {
     def * = (id.?, title, body, created, edited, published, authorId) <> (DBPost.tupled, DBPost.unapply)
   }
   
-  case class DBComments(
+  case class DBComment(
     id: Option[Long],
     title: String,
     body: String,
@@ -127,7 +127,7 @@ object DBTableDefinitions {
     post: Long
   )
   
-  class Comments(tag: Tag) extends Table[DBComments](tag, "comment") {
+  class Comments(tag: Tag) extends Table[DBComment](tag, "comment") {
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def title = column[String]("title", O.DBType("text"))
     def body = column[String]("body", O.DBType("text"))
@@ -135,7 +135,7 @@ object DBTableDefinitions {
     def edited = column[Long]("edited")
     def authorId = column[String]("authorId", O.NotNull)
     def postId = column[Long]("postId", O.NotNull)
-    def * = (id.?, title, body, created, edited, authorId, postId) <> (DBComments.tupled, DBComments.unapply)
+    def * = (id.?, title, body, created, edited, authorId, postId) <> (DBComment.tupled, DBComment.unapply)
   }
 
   val slickUsers = TableQuery[Users]

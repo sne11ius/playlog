@@ -63,12 +63,20 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
   override def delete(postId: Long) = {
     DB withSession { implicit session =>
       (slickPosts filter(_.id === postId)).delete
+      (slickComments filter(_.postId === postId)).delete
     }
   }
   
   override def deleteAll = {
     DB withSession { implicit session =>
-      slickPosts delete
+      slickPosts.delete
+      slickComments.delete
+    }
+  }
+  
+  override def addComment(postId: Long, comment: Comment) = {
+    DB withSession { implicit session =>
+      slickComments.insert(DBComment(comment.id, comment.title, comment.body, comment.created.getMillis(), comment.edited.getMillis(), comment.author.userID.toString(), postId))
     }
   }
 }

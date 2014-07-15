@@ -1,6 +1,7 @@
 @(post: Post, user: Option[User])(implicit env: com.mohiva.play.silhouette.core.Environment[User, _], request: RequestHeader)
 
 @import com.mohiva.play.silhouette.core.providers._
+@import forms._
 
 @user match {
   case Some(user) => {}
@@ -36,4 +37,5 @@
 }.getOrElse {
   <div class="well well-small">You are not signed in and cannot do anything.</div>
 }
+@commentPanel(post, CommentForm.form, user)
 <hr>

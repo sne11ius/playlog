@@ -21,8 +21,6 @@ object AdminIdentifiers {
   }
   
   def findByUserId(socialId: UUID)(implicit s: Session): Option[AdminIdentifier] = {
-    Logger.debug(findAll().toString)
-    Logger.debug("==> " + socialId)
     identifiers.filter(_.socialId === socialId.toString()).firstOption
   } 
   
