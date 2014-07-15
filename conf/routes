@@ -1,5 +1,8 @@
 # Home page
 GET     /                            @controllers.Application.index(inTitle: Option[String])
+# FIXME: This should directly bind to a joda DateTime
+# ([0-9]{4})(-)?(1[0-2]|0[1-9])(?(2)-)(3[0-1]|0[1-9]|[1-2][0-9])
+GET     /$date<\d\d\d\d-\d\d-\d\d>/:title                @controllers.Application.singlePost(date: String, title: String)
 
 GET /admin                           @controllers.AdminController.index
 

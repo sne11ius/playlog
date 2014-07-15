@@ -6,11 +6,13 @@ import scala.slick.lifted.Tag
 import models.Post
 import models.Comment
 import org.joda.time.DateTime
+import java.util.Date
 import javax.inject.Inject
 import models.daos.UserDAO
 import play.api.Play.current
 import models.daos.DBTableDefinitions._
 import play.Logger
+import org.joda.time.DateTimeZone
 
 class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
 
@@ -56,6 +58,22 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
         }
       }
     }
+  }
+  
+  override def findSinglePost(date: DateTime, title: String): List[Post] = {
+    val allPublished = findAllPublished(Some(title))
+    //Logger.debug("Num all: " + allPublished.length)
+    val minDate = date.plusDays(1)//.minusMillis(1)
+    val maxDate = date.plusDays(2)
+    //Logger.debug("minDate: " + minDate)
+    //Logger.debug("maxDate: " + maxDate)
+    val candidates = allPublished.filter(p => {
+      val created = p.created.withZone(DateTimeZone.UTC)
+      //Logger.debug("Created: " + created)
+      created.isAfter(date) && created.isBefore(maxDate)
+    })
+    //Logger.debug("Num candidates: " + candidates.length)
+    candidates.take(1)
   }
   
   override def find(postId: Long): Post = {
