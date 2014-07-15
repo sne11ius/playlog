@@ -26,10 +26,10 @@
 				<a class="navbar-brand" href="@routes.Application.index(None)">wasis.nu/mit/blog</a>
 			</div>
 			<nav class="collapse navbar-collapse">
-				<ul class="nav navbar-nav">
+				<!--ul class="nav navbar-nav">
 					<li><a href="@routes.Application.index(None)">Home</a></li>
 					<li><a href="https://github.com/sne11ius/playlog">GitHub</a></li>
-				</ul>
+				</ul-->
 				<ul class="nav navbar-nav navbar-right">
 					@user.map { u =>
             @if(u.isAdmin) {
