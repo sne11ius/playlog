@@ -23,12 +23,12 @@ import forms._
 class Application @Inject() (userService: UserService, postService: PostService, implicit val env: Environment[User, CachedCookieAuthenticator])
     extends Controller with Silhouette[User, CachedCookieAuthenticator] {
   
-  def index = UserAwareAction.async { implicit request =>
+  def index(inTitle: Option[String]) = UserAwareAction.async { implicit request =>
     DB.withSession { implicit session =>
       if (AdminIdentifiers.findAll.isEmpty) {
         Future.successful(Ok(views.html.plain()))
       } else {
-    	  Future.successful(Ok(views.html.index(postService.findAllPublished, request.identity)))
+    	  Future.successful(Ok(views.html.index(postService.findAllPublished(inTitle), request.identity)))
       }
     }
   }
@@ -36,14 +36,14 @@ class Application @Inject() (userService: UserService, postService: PostService,
   def removeAll = SecuredAction.async { implicit request =>
     DB.withSession { implicit session =>
       postService.deleteAll
-      Future.successful(Redirect(routes.Application.index))
+      Future.successful(Redirect(routes.Application.index(None)))
     }
   }
   
   def removePost = DBAction { implicit rs => {
       val postId = Form("postId" -> text).bindFromRequest.get.toLong
       postService.delete(postId)
-      Redirect(routes.Application.index)
+      Redirect(routes.Application.index(None))
     }
   }
   
@@ -54,7 +54,7 @@ class Application @Inject() (userService: UserService, postService: PostService,
    */
   def signUp = UserAwareAction.async { implicit request =>
     request.identity match {
-      case Some(user) => Future.successful(Redirect(routes.Application.index))
+      case Some(user) => Future.successful(Redirect(routes.Application.index(None)))
       case None => Future.successful(Ok(views.html.signUp(SignUpForm.form)))
     }
   }

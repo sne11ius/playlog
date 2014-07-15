@@ -12,7 +12,7 @@ trait PostService {
   
   def findAll: List[Post]
 
-  def findAllPublished: List[Post]
+  def findAllPublished(inTitle: Option[String]): List[Post]
   
   def find(postId: Long): Post
   
