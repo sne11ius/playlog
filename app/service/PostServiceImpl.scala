@@ -10,6 +10,7 @@ import javax.inject.Inject
 import models.daos.UserDAO
 import play.api.Play.current
 import models.daos.DBTableDefinitions._
+import play.Logger
 
 class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
 
@@ -25,15 +26,35 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
     }
   }
 
-  override def findAllPublished: List[Post] = {
+  override def findAllPublished(inTitle: Option[String]): List[Post] = {
     DB withSession { implicit session =>
       val allUsers = userDAO.findAll
-      (slickPosts.sortBy(p => p.created.desc).filter(_.published === true) list).map(p => {
-        val comments = slickComments.sortBy(c => c.created.desc).filter(_.postId === p.id).list.map(c =>
-          Comment(c.id, c.title, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
-        )
-        Post(p.id, p.title, p.body, new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
-      })
+      inTitle match {
+        case None =>
+	      (slickPosts.sortBy(p => p.created.desc).filter(_.published === true) list).map(p => {
+	        val comments = slickComments.sortBy(c => c.created.desc).filter(_.postId === p.id).list.map(c =>
+	          Comment(c.id, c.title, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
+	        )
+	        Post(p.id, p.title, p.body, new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
+	      })
+        case Some(query) => {
+          val strings = query
+              .toLowerCase()
+              .replace("-", "_")
+              .replace(" ", "_")
+              .replace("%20", "_")
+              .split("_").toList
+          Logger.debug("Query: " + query)
+          (slickPosts.sortBy(p => p.created.desc).filter(_.published === true) list).filter(p => {
+        	  strings.forall(s => p.title.toLowerCase contains s)
+          }).map(p => {
+	        val comments = slickComments.sortBy(c => c.created.desc).filter(_.postId === p.id).list.map(c =>
+	          Comment(c.id, c.title, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
+	        )
+	        Post(p.id, p.title, p.body, new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
+	      })
+        }
+      }
     }
   }
   

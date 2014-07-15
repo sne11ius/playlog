@@ -99,11 +99,11 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
                 val post = Post(None, p.title, p.body, p.created, p.edited, p.published, user.get.get, List())
                 postService.insert(post)
                 Logger.debug("post added")
-                Future.successful(Redirect(routes.Application.index))
+                Future.successful(Redirect(routes.Application.index(None)))
               }
             }
           }
-          Future.successful(Redirect(routes.Application.index))
+          Future.successful(Redirect(routes.Application.index(None)))
         }
       })
   }
