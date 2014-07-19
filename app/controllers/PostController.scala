@@ -65,13 +65,15 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
       Reads.pure(List()))(Post)
     val postsToAdd = Json.parse(Form("jsonPosts" -> text).bindFromRequest.get).as[List[Post]]
 
+    Logger.debug("Importing...")
     DB withSession { implicit session =>
       postsToAdd.map(post => {
         println(post)
         postService.insert(post)
       })
     }
-    Future.successful(Ok(html.importposts.importPosts()))
+    Logger.debug("...done")
+    Future.successful(Redirect(routes.Application.index(None)))
   }
 
   def editPost = UserAwareAction.async { implicit request =>

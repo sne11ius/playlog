@@ -10,6 +10,7 @@ import java.util.UUID
 import play.Logger
 import models.database.AdminIdentifiers
 import scala.concurrent.ExecutionContext.Implicits.global
+import models.User
 
 /**
  * Give access to the user object using Slick
@@ -54,24 +55,28 @@ class UserDAOSlick extends UserDAO {
    * @return The found user or None if no user for the given ID could be found.
    */
   def find(userID: UUID) = {
+    Future.successful {
+      simpleFind(userID)
+    }
+  }
+  
+  private def simpleFind(userID: UUID): Option[User] = {
     DB withSession { implicit session =>
-      Future.successful {
-        slickUsers.filter(
-          _.id === userID.toString
-        ).firstOption match {
-          case Some(user) =>
-            slickUserLoginInfos.filter(_.userID === user.userID).firstOption match {
-              case Some(info) =>
-                slickLoginInfos.filter(_.id === info.loginInfoId).firstOption match {
-                  case Some(loginInfo) =>
-                    val isAdmin = AdminIdentifiers.findByUserId(UUID.fromString(user.userID)).isDefined
-                    Some(User(UUID.fromString(user.userID), LoginInfo(loginInfo.providerID, loginInfo.providerKey), user.firstName, user.lastName, user.fullName, user.email, user.avatarURL, isAdmin))
-                  case None => None
-                }
-              case None => None
-            }
-          case None => None
-        }
+      slickUsers.filter(
+        _.id === userID.toString
+      ).firstOption match {
+        case Some(user) =>
+          slickUserLoginInfos.filter(_.userID === user.userID).firstOption match {
+            case Some(info) =>
+              slickLoginInfos.filter(_.id === info.loginInfoId).firstOption match {
+                case Some(loginInfo) =>
+                  val isAdmin = AdminIdentifiers.findByUserId(UUID.fromString(user.userID)).isDefined
+                  Some(User(UUID.fromString(user.userID), LoginInfo(loginInfo.providerID, loginInfo.providerKey), user.firstName, user.lastName, user.fullName, user.email, user.avatarURL, isAdmin))
+                case None => None
+              }
+            case None => None
+          }
+        case None => None
       }
     }
   }
@@ -116,9 +121,8 @@ class UserDAOSlick extends UserDAO {
     DB withSession { implicit session =>
       val result = collection.mutable.Map[String, User]()
       slickUsers.list.foreach(user => {
-        // Blocking here to reduze future hazzle
-        find(UUID.fromString(user.userID)) map {
-          case u => result(u.get.userID.toString()) = u.get
+        simpleFind(UUID.fromString(user.userID)) map {
+          case u => result(u.userID.toString()) = u
         }
       })
       result.toMap

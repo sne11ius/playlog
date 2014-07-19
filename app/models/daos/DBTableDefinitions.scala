@@ -108,8 +108,8 @@ object DBTableDefinitions {
   
   class Posts(tag: Tag) extends Table[DBPost](tag, "post") {
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-    def title = column[String]("title", O.DBType("text"))
-    def body = column[String]("body", O.DBType("text"))
+    def title = column[String]("title", O.DBType("LONGTEXT"))
+    def body = column[String]("body", O.DBType("LONGTEXT"))
     def created = column[Long]("date")
     def edited = column[Long]("edited")
     def published = column[Boolean]("published")
