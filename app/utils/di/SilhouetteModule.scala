@@ -56,7 +56,8 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     eventBus: EventBus,
     credentialsProvider: CredentialsProvider,
     googleProvider: GoogleProvider,
-    facebookProvider: FacebookProvider) : Environment[User, CachedCookieAuthenticator] = {
+    facebookProvider: FacebookProvider,
+    twitterProvider: TwitterProvider) : Environment[User, CachedCookieAuthenticator] = {
 
     Environment[User, CachedCookieAuthenticator](
       userService,
@@ -64,7 +65,8 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
       Map(
         credentialsProvider.id -> credentialsProvider,
         googleProvider.id -> googleProvider,
-        facebookProvider.id -> facebookProvider
+        facebookProvider.id -> facebookProvider,
+        twitterProvider.id -> twitterProvider
       ),
       eventBus
     )
@@ -174,7 +176,6 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
    * @param httpLayer The HTTP layer implementation.
    * @return The Twitter provider.
    */
-  /*
   @Provides
   def provideTwitterProvider(cacheLayer: CacheLayer, httpLayer: HTTPLayer): TwitterProvider = {
     val settings = OAuth1Settings(
@@ -187,5 +188,4 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
 
     TwitterProvider(cacheLayer, httpLayer, new PlayOAuth1Service(settings), settings)
   }
-  */
 }
