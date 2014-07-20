@@ -90,7 +90,7 @@ object HTMLCompressorFilter {
     compressor.setRemoveHttpProtocol(true);        //replace "http://" with "//" inside tag attributes
     compressor.setRemoveHttpsProtocol(true);       //replace "https://" with "//" inside tag attributes
     compressor.setPreserveLineBreaks(false);        //preserves original line breaks
-    compressor.setRemoveSurroundingSpaces("html,a,div,ul,ol,li,br,p,nav"); //remove spaces around provided tags
+    compressor.setRemoveSurroundingSpaces("html,div,ul,ol,li,br,p,nav"); //remove spaces around provided tags
     compressor
   })
 }
