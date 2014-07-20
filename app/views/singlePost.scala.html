@@ -1,4 +1,4 @@
-@(post: Post, user: Option[User])(implicit env: com.mohiva.play.silhouette.core.Environment[User, _], request: RequestHeader)
+@(post: Post, config: FeedConfig, user: Option[User])(implicit env: com.mohiva.play.silhouette.core.Environment[User, _], request: RequestHeader)
 
 @import com.mohiva.play.silhouette.core.providers._
 @import forms._
@@ -19,7 +19,7 @@
 }
 
 <h2>@Html(post.title)</h2>
-<span class="pull-right">Created: @formatJoda(post.created) | Edited: @formatJoda(post.edited) | Id: @post.id | Author: @post.author.fullName | <img style="width:20px" src="@post.author.avatarURL"></span>
+<span class="pull-right">Created: @formatJoda(post.created)<br>Edited: @formatJoda(post.edited)<br>Id: @post.id<br>Author: @post.author.fullName<br><img style="width:20px" src="@post.author.avatarURL"><br><a href="@permalink(config, post)" class="btn btn-default btn-xs">Link</a></span>
 <p>@Html(post.body)</p>
 @user.map { u =>
   @if(u.isAdmin) {

@@ -15,15 +15,11 @@
   @for(post <- posts) {
     <entry>
       <title>@post.title</title>
-      <link rel="alternate" type="text/html" href="@(config.baseUrl)/@{
-        val titlePart = post.title.replaceAll("\\<.*?\\>", "").replaceAll("\\&.*?\\;", "").replaceAll(" ", "-")
-        val datePart = post.created.toString("yyyy-MM-dd")
-        datePart + "/" + titlePart 
-      }" />
+      <link rel="alternate" type="text/html" href="@permalink(config, post)" />
       <id>urn:uuid:@post.id</id>
       <updated>@post.edited</updated>
-      <summary type="html">@post.body.substring(math.min(post.body.length, config.summaryLength))</summary>
-      <content type="html">@post.body</content>
+      <summary type="html">@post.body.substring(0, math.min(post.body.length, config.summaryLength))</summary>
+      <content type="html">@post.body.substring(0, math.min(post.body.length, config.bodyLength))</summary>
     </entry>
   }
 </feed>

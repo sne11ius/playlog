@@ -30,7 +30,7 @@ class CommentController @Inject() (postService: PostService, implicit val env: E
     CommentForm.form.bindFromRequest.fold (
       form => {
         Logger.debug("Bad request")
-        Future.successful(BadRequest(views.html.index(postService.findAllPublished(None), Some(request.identity))))
+        Future.successful(BadRequest(views.html.index(FeedConfig, postService.findAllPublished(None), Some(request.identity))))
       },
       data => {
         val author = request.identity

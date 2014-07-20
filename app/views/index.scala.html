@@ -1,9 +1,9 @@
-@(posts: List[Post], user: Option[User] = None)(implicit env: com.mohiva.play.silhouette.core.Environment[User, _], request: RequestHeader)
+@(config: FeedConfig, posts: List[Post], user: Option[User] = None)(implicit env: com.mohiva.play.silhouette.core.Environment[User, _], request: RequestHeader)
 
 @import com.mohiva.play.silhouette.core.providers._
 
 @main(Html("wasis.nu/mit<wbr>/blog"), "", user) {
   @for(post <- posts) {
-    @singlePost(post, user)
+    @singlePost(post, config, user)
   }
 }

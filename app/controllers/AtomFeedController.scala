@@ -26,16 +26,7 @@ import org.joda.time.DateTimeZone
 class AtomFeedController @Inject() (postService: PostService) extends Controller {
   
   def createAtomFeed = Action {
-    val config = FeedConfig(
-      title = "wasis.nu/mit/blog",
-      subtitle = "Blog about technical stuff.",
-	  authorName = "Cornelius Lilge",
-	  feedId = "urn:uuid:14369a20-1023-11e4-9191-0800200c9a66",
-	  baseUrl = "http://wasis.nu/mit/blog",
-	  summaryLength = 200,
-	  copyright = "(c) 2014 - wasis.nu"
-    )
-    Ok(views.html.atomFeed(config, postService.findAllPublished(None))).as("application/atom+xml")
+    Ok(views.html.atomFeed(FeedConfig, postService.findAllPublished(None))).as("application/atom+xml")
   }
   
 }
