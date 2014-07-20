@@ -8,7 +8,7 @@
   <id>@config.feedId</id>
   <updated>@if(!posts.isEmpty) {@posts(0).edited}</updated>
 
-  <link rel="alternate" href="http://wasis.nu/mit/blog" />
+  <link rel="alternate" href="@config.baseUrl" />
   <rights>@config.copyright</rights>
   <dc:rights>@config.copyright</dc:rights> 
 
@@ -19,7 +19,7 @@
       <id>urn:uuid:@post.id</id>
       <updated>@post.edited</updated>
       <summary type="html">@post.body.substring(0, math.min(post.body.length, config.summaryLength))</summary>
-      <content type="html">@post.body.substring(0, math.min(post.body.length, config.bodyLength))</summary>
+      <content type="html">@post.body.substring(0, math.min(post.body.length, config.bodyLength))</content>
     </entry>
   }
 </feed>
