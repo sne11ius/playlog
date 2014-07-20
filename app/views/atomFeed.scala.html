@@ -1,0 +1,29 @@
+@(config: FeedConfig, posts: List[Post])<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <author>
+    <name>@config.authorName</name>
+  </author>
+  <title>@config.title</title>
+  <subtitle>@config.subtitle</subtitle>
+  <id>@config.feedId</id>
+  <updated>@if(!posts.isEmpty) {@posts(0).edited}</updated>
+
+  <link rel="alternate" href="http://wasis.nu/mit/blog" />
+  <rights>@config.copyright</rights>
+  <dc:rights>@config.copyright</dc:rights> 
+
+  @for(post <- posts) {
+    <entry>
+      <title>@post.title</title>
+      <link rel="alternate" type="text/html" href="@(config.baseUrl)/@{
+        val titlePart = post.title.replaceAll("\\<.*?\\>", "").replaceAll("\\&.*?\\;", "").replaceAll(" ", "-")
+        val datePart = post.created.toString("yyyy-MM-dd")
+        datePart + "/" + titlePart 
+      }" />
+      <id>urn:uuid:@post.id</id>
+      <updated>@post.edited</updated>
+      <summary type="html">@post.body.substring(math.min(post.body.length, config.summaryLength))</summary>
+      <content type="html">@post.body</content>
+    </entry>
+  }
+</feed>

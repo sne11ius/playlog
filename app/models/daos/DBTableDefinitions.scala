@@ -1,6 +1,7 @@
 package models.daos
 
 import play.api.db.slick.Config.driver.simple._
+import java.util.UUID
 
 object DBTableDefinitions {
 
@@ -97,7 +98,7 @@ object DBTableDefinitions {
   }
   
   case class DBPost(
-    id: Option[Long],
+    id: UUID,
     title: String,
     body: String,
     created: Long,
@@ -107,14 +108,14 @@ object DBTableDefinitions {
   )
   
   class Posts(tag: Tag) extends Table[DBPost](tag, "post") {
-    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+    def id = column[UUID]("id", O.PrimaryKey, O.NotNull)
     def title = column[String]("title", O.DBType("LONGTEXT"))
     def body = column[String]("body", O.DBType("LONGTEXT"))
     def created = column[Long]("date")
     def edited = column[Long]("edited")
     def published = column[Boolean]("published")
     def authorId = column[String]("authorId", O.NotNull)
-    def * = (id.?, title, body, created, edited, published, authorId) <> (DBPost.tupled, DBPost.unapply)
+    def * = (id, title, body, created, edited, published, authorId) <> (DBPost.tupled, DBPost.unapply)
   }
   
   case class DBComment(
@@ -124,7 +125,7 @@ object DBTableDefinitions {
     created: Long,
     edited: Long,
     author: String,
-    post: Long
+    post: UUID
   )
   
   class Comments(tag: Tag) extends Table[DBComment](tag, "comment") {
@@ -134,7 +135,7 @@ object DBTableDefinitions {
     def created = column[Long]("date")
     def edited = column[Long]("edited")
     def authorId = column[String]("authorId", O.NotNull)
-    def postId = column[Long]("postId", O.NotNull)
+    def postId = column[UUID]("postId", O.NotNull)
     def * = (id.?, title, body, created, edited, authorId, postId) <> (DBComment.tupled, DBComment.unapply)
   }
 

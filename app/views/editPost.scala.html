@@ -8,7 +8,7 @@
 }
 
 @main(title, nav = "edit") {
-  @helper.form(action = routes.EditPostController.updateExistingPost(post.id.get)) {
+  @helper.form(action = routes.EditPostController.updateExistingPost(post.id)) {
     @inputText(
       editPostForm("title"),
       '_label -> "",

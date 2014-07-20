@@ -28,7 +28,7 @@
         <input type="hidden" name="postId" value="@post.id">
         <button id="submit" type="submit" value="submit" class="btn btn-danger">Eintrag löschen</button>
       }
-      @helper.form(action = routes.EditPostController.editExistingPost(post.id.get)) {
+      @helper.form(action = routes.EditPostController.editExistingPost(post.id)) {
         <input type="hidden" name="postId" value="@post.id">
         <button id="submit" type="submit" value="submit" class="btn btn-primary">Eintrag bearbeiten</button>
       }

@@ -19,6 +19,7 @@ import javax.inject.Inject
 import play.api.Play.current
 import scala.concurrent.Future
 import com.mohiva.play.silhouette.core.exceptions.AccessDeniedException
+import java.util.UUID
 
 class EditPostController @Inject() (userService: UserService, postService: PostService, implicit val env: Environment[User, CachedCookieAuthenticator])
     extends Controller with Silhouette[User, CachedCookieAuthenticator] {
@@ -31,14 +32,14 @@ class EditPostController @Inject() (userService: UserService, postService: PostS
       "published" -> boolean
     )
     {
-      (title, body, published) => Post(None, title, body, null, null, published, null, List())
+      (title, body, published) => Post(UUID.randomUUID(), title, body, null, null, published, null, List())
     } 
     {
       post => Some(post.title, post.body, post.published)
     }
   )
   
-  def editExistingPost(postId: Long) = SecuredAction.async { implicit request =>
+  def editExistingPost(postId: UUID) = SecuredAction.async { implicit request =>
     DB.withSession { implicit session =>
       AdminIdentifiers.findByUserId(request.identity.userID) match {
         case Some(user) => {
@@ -53,7 +54,7 @@ class EditPostController @Inject() (userService: UserService, postService: PostS
     }
   }
   
-  def updateExistingPost(postId: Long) = SecuredAction.async { implicit request =>
+  def updateExistingPost(postId: UUID) = SecuredAction.async { implicit request =>
     DB.withSession { implicit session =>
       if (!request.identity.isAdmin) {
         throw new AccessDeniedException("You are not an admin!!!!")
@@ -67,7 +68,7 @@ class EditPostController @Inject() (userService: UserService, postService: PostS
           Logger.debug("Updating post by id: " + postId)
           val existingPost = postService.find(postId)
     	  val mergedPost = Post(
-    	    Some(postId),
+    	    postId,
     	    editedPost.title,
     	    editedPost.body,
     	    existingPost.created,

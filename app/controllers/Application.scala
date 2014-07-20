@@ -22,6 +22,7 @@ import forms._
 import org.joda.time.format.DateTimeFormatter
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.DateTimeZone
+import java.util.UUID
 
 class Application @Inject() (userService: UserService, postService: PostService, implicit val env: Environment[User, CachedCookieAuthenticator])
     extends Controller with Silhouette[User, CachedCookieAuthenticator] {
@@ -51,7 +52,7 @@ class Application @Inject() (userService: UserService, postService: PostService,
   }
   
   def removePost = DBAction { implicit rs => {
-      val postId = Form("postId" -> text).bindFromRequest.get.toLong
+      val postId = UUID.fromString(Form("postId" -> text).bindFromRequest.get)
       postService.delete(postId)
       Redirect(routes.Application.index(None))
     }

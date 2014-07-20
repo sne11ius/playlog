@@ -1,9 +1,10 @@
 package models
 
 import org.joda.time.DateTime
+import java.util.UUID
 
 case class Post(
-  id: Option[Long],
+  id: UUID,
   title: String,
   body: String,
   created: DateTime,

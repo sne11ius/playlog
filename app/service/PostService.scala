@@ -7,6 +7,7 @@ import models.Comment
 import javax.inject.Inject
 import models.daos.UserDAO
 import org.joda.time.DateTime
+import java.util.UUID
 
 trait PostService {
   
@@ -16,15 +17,15 @@ trait PostService {
   
   def findSinglePost(date: DateTime, title: String): List[Post]
   
-  def find(postId: Long): Post
+  def find(postId: UUID): Post
   
   def insert(post: Post)
   
   def update(post: Post)
   
-  def delete(postId: Long)
+  def delete(postId: UUID)
   
   def deleteAll
   
-  def addComment(postId: Long, comment: Comment)
+  def addComment(postId: UUID, comment: Comment)
 }

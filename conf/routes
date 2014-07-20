@@ -7,8 +7,8 @@ GET     /$date<\d\d\d\d-\d\d-\d\d>/:title                @controllers.Applicatio
 GET /admin                           @controllers.AdminController.index
 
 # Edit existing post
-GET     /editPost/:postId            @controllers.EditPostController.editExistingPost(postId: Long)
-POST    /editPost/:postId            @controllers.EditPostController.updateExistingPost(postId: Long)
+GET     /editPost/:postId            @controllers.EditPostController.editExistingPost(postId: java.util.UUID)
+POST    /editPost/:postId            @controllers.EditPostController.updateExistingPost(postId: java.util.UUID)
 
 # Posts
 GET     /compose                     @controllers.PostController.form
@@ -34,3 +34,6 @@ GET     /signOut                     @controllers.AuthenticationController.signO
 GET     /authenticate/:provider      @controllers.SocialAuthController.authenticate(provider)
 POST    /authenticate/credentials    @controllers.CredentialsAuthController.authenticate
 POST    /signUp                      @controllers.SignUpController.signUp
+
+# Atom feed
+GET     /feed                        @controllers.AtomFeedController.createAtomFeed
