@@ -37,5 +37,8 @@
 }.getOrElse {
   <div class="well well-small">You are not signed in and cannot do anything.</div>
 }
+<div class="fb-like" data-href="@permalink(config, post)" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+<div class="g-plusone" data-size="medium" data-annotation="inline" data-width="300" data-href="@permalink(config, post)"></div>
+<a href="https://twitter.com/share" class="twitter-share-button" data-url="@permalink(config, post)">Tweet</a>
 @commentPanel(post, CommentForm.form, user)
 <hr>
