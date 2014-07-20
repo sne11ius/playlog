@@ -55,14 +55,16 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     authenticatorService: AuthenticatorService[CachedCookieAuthenticator],
     eventBus: EventBus,
     credentialsProvider: CredentialsProvider,
-    googleProvider: GoogleProvider) : Environment[User, CachedCookieAuthenticator] = {
+    googleProvider: GoogleProvider,
+    facebookProvider: FacebookProvider) : Environment[User, CachedCookieAuthenticator] = {
 
     Environment[User, CachedCookieAuthenticator](
       userService,
       authenticatorService,
       Map(
         credentialsProvider.id -> credentialsProvider,
-        googleProvider.id -> googleProvider
+        googleProvider.id -> googleProvider,
+        facebookProvider.id -> facebookProvider
       ),
       eventBus
     )
@@ -136,7 +138,6 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
    * @param httpLayer The HTTP layer implementation.
    * @return The Facebook provider.
    */
-  /*
   @Provides
   def provideFacebookProvider(cacheLayer: CacheLayer, httpLayer: HTTPLayer): FacebookProvider = {
     FacebookProvider(cacheLayer, httpLayer, OAuth2Settings(
@@ -147,7 +148,6 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
       clientSecret = Play.configuration.getString("silhouette.facebook.clientSecret").get,
       scope = Play.configuration.getString("silhouette.facebook.scope")))
   }
-  */
 
   /**
    * Provides the Google provider.
