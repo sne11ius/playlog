@@ -87,8 +87,8 @@ object HTMLCompressorFilter {
     compressor.setRemoveInputAttributes(true);     //remove optional attributes from input tags
     compressor.setSimpleBooleanAttributes(true);   //remove values from boolean tag attributes
     compressor.setRemoveJavaScriptProtocol(true);  //remove "javascript:" from inline event handlers
-    compressor.setRemoveHttpProtocol(true);        //replace "http://" with "//" inside tag attributes
-    compressor.setRemoveHttpsProtocol(true);       //replace "https://" with "//" inside tag attributes
+    compressor.setRemoveHttpProtocol(false);        //replace "http://" with "//" inside tag attributes
+    compressor.setRemoveHttpsProtocol(false);       //replace "https://" with "//" inside tag attributes
     compressor.setPreserveLineBreaks(false);        //preserves original line breaks
     compressor.setRemoveSurroundingSpaces("html,div,ul,ol,li,br,p,nav"); //remove spaces around provided tags
     compressor

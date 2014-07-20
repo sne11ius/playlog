@@ -61,7 +61,13 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript" src="@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))"></script>
-	<script type="text/javascript" src="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))"></script>
+	<script src="@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))"></script>
+	<script src="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))"></script>
+	<script src="@routes.Assets.at("javascripts/prettify.min.js")"></script>
+	<script src="@routes.Assets.at("javascripts/lang-clj.js")"></script>
+	<script>
+    prettyPrint();
+	</script>
+	<!--script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=css&skin=sunburst"></script-->
 </body>
 </html>
