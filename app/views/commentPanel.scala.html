@@ -1,6 +1,7 @@
-@(post: Post, commentForm: Form[forms.CommentForm.Data], user: Option[User])
+@(post: Post, commentForm: Form[forms.CommentForm.Data], user: Option[User])(implicit env: com.mohiva.play.silhouette.core.Environment[User, _], request: RequestHeader)
 
 @import bootstrap._
+@import com.mohiva.play.silhouette.core.providers._
 
 <div class="well well-small">
   <h3>Comments for post #@post.id</h3>
@@ -21,7 +22,15 @@
       </fieldset>
     }
     case None => {
-      <div>Sign in to post a comment.</div>
+      <div class="well well-small">Sign in to post a comment:
+        @defining(env.providers.values.filter(_.isInstanceOf[SocialProvider[_]])) { providers =>
+          @if(!providers.isEmpty) {
+            @for(p <- providers) {
+              <a href="@routes.SocialAuthController.authenticate(p.id)"><img src="@routes.Assets.at(s"images/providers/${p.id}.png")" style="width:16px;height:16px;"></a>
+            }
+          }
+        }
+      </div>
     }
   }
   @if(post.comments.isEmpty) {
