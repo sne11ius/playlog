@@ -2,8 +2,9 @@
 
 @import com.mohiva.play.silhouette.core.providers._
 @import bootstrap._
+@import models.FeedConfig
 
-@main(Html("wasis.nu/mit<wbr>/blog"), "") {
+@main(FeedConfig.title, "") {
     @request.flash.get("error").map { msg =>
         <div class="alert alert-danger alert-error">
             <a href="#" class="close" data-dismiss="alert">&times;</a>

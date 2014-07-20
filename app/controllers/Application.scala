@@ -32,7 +32,9 @@ class Application @Inject() (userService: UserService, postService: PostService,
       if (AdminIdentifiers.findAll.isEmpty) {
         Future.successful(Ok(views.html.plain()))
       } else {
-    	Future.successful(Ok(views.html.index(FeedConfig, postService.findAllPublished(inTitle), request.identity)))
+        val posts = postService.findAllPublished(inTitle)
+        val title = if (1 == posts.length) posts(0).title.replaceAll("\\<.*?\\>", "").replaceAll("\\&.*?\\;", "") + " - wasis.nu/mit/blog" else FeedConfig.title
+    	Future.successful(Ok(views.html.index(FeedConfig, title, posts, request.identity)))
       }
     }
   }
@@ -40,7 +42,9 @@ class Application @Inject() (userService: UserService, postService: PostService,
   def singlePost(dateString: String, title: String) = UserAwareAction.async { implicit request =>
     DB.withSession { implicit session =>
       val date = DateTimeFormat.forPattern("yyyy-MM-dd").parseDateTime(dateString).withZone(DateTimeZone.UTC).withHourOfDay(0)
-      Future.successful(Ok(views.html.index(FeedConfig, postService.findSinglePost(date, title), request.identity)))
+      val singlePost = postService.findSinglePost(date, title)
+      val pageTitle = singlePost(0).title.replaceAll("\\<.*?\\>", "").replaceAll("\\&.*?\\;", "") + " - wasis.nu/mit/blog"
+      Future.successful(Ok(views.html.index(FeedConfig, pageTitle, postService.findSinglePost(date, title), request.identity)))
     }
   }
   

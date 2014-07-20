@@ -1,6 +1,8 @@
 @()
 
-@main(Html("wasis.nu/mit<wbr>/blog"), "import") {
+@import models.FeedConfig
+
+@main(FeedConfig.title, "import") {
   @helper.form(action = routes.PostController.importPosts) {
     <textarea name="jsonPosts" style="width:100%;height:500px;">paste your json here</textarea>
     <div class="actions">

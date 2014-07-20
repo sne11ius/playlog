@@ -1,7 +1,9 @@
 @(signInForm: Form[forms.SignUpForm.Data])(implicit request: RequestHeader)
 
 @import bootstrap._
-@main(Html("wasis.nu/mit<wbr>/blog"), "") {
+@import models.FeedConfig
+
+@main(FeedConfig.title, "") {
   @request.flash.get("error").map { msg =>
     <div class="alert alert-danger alert-error">
 	    <a href="#" class="close" data-dismiss="alert">&times;</a> <strong>Error!</strong>

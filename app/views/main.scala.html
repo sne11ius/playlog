@@ -1,17 +1,17 @@
-@(title: Html, nav: String = "", user: Option[models.User] = None)(content: Html)
+@(title: String, nav: String = "", user: Option[models.User] = None)(content: Html)
 
 <!DOCTYPE html>
 <html>
 <head>
-	<title>wasis.nu/mit/blog</title>
+	<title>@title</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
 	<link rel="stylesheet" href="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.css"))">
 	<link rel="stylesheet" href="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap-theme.min.css"))">
 	<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
-	<!-- link href='http://fonts.googleapis.com/css?family=Vollkorn' rel='stylesheet' type='text/css'-->
-	<!-- link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'-->
+	<link href='http://fonts.googleapis.com/css?family=Vollkorn' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -60,9 +60,6 @@
 	</div>
 	<div class="container">
 		<div class="content">
-			<!--div class="page-header">
-          <h1>@title</h1>
-      </div-->
 			<div class="row">
 				<div class="span14">@content</div>
 			</div>

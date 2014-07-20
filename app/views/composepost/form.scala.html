@@ -3,11 +3,7 @@
 @import helper._
 @import helper.twitterBootstrap._
 
-@title = {
-    Beitrag erstellen
-}
-
-@main(title, nav = "compose") {
+@main("Beitrag erstellen", nav = "compose") {
   <div class="well well-small">
       @helper.form(action = routes.PostController.submit) {
           @inputText(

@@ -1,6 +1,6 @@
 @(users: Map[String, User], user: User)(implicit env: com.mohiva.play.silhouette.core.Environment[User, _], request: RequestHeader)
 
-@main(Html("Admin"), "", Some(user)) {
+@main("Admin", "", Some(user)) {
   <p>This is just a simple list. There is nothing you can do here.</p>
   <table class="userlist">
     <tr>
