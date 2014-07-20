@@ -57,7 +57,8 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     credentialsProvider: CredentialsProvider,
     googleProvider: GoogleProvider,
     facebookProvider: FacebookProvider,
-    twitterProvider: TwitterProvider) : Environment[User, CachedCookieAuthenticator] = {
+    twitterProvider: TwitterProvider,
+    githubProvider: GitHubProvider) : Environment[User, CachedCookieAuthenticator] = {
 
     Environment[User, CachedCookieAuthenticator](
       userService,
@@ -66,7 +67,8 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
         credentialsProvider.id -> credentialsProvider,
         googleProvider.id -> googleProvider,
         facebookProvider.id -> facebookProvider,
-        twitterProvider.id -> twitterProvider
+        twitterProvider.id -> twitterProvider,
+        githubProvider.id -> githubProvider
       ),
       eventBus
     )
@@ -187,5 +189,16 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
       consumerSecret = Play.configuration.getString("silhouette.twitter.consumerSecret").get)
 
     TwitterProvider(cacheLayer, httpLayer, new PlayOAuth1Service(settings), settings)
+  }
+  
+  @Provides
+  def provideGitHubProvider(cacheLayer: CacheLayer, httpLayer: HTTPLayer): GitHubProvider = {
+    GitHubProvider(cacheLayer, httpLayer, OAuth2Settings(
+      authorizationURL = Play.configuration.getString("silhouette.github.authorizationURL").get,
+      accessTokenURL = Play.configuration.getString("silhouette.github.accessTokenURL").get,
+      redirectURL = Play.configuration.getString("silhouette.github.redirectURL").get,
+      clientID = Play.configuration.getString("silhouette.github.clientID").get,
+      clientSecret = Play.configuration.getString("silhouette.github.clientSecret").get,
+      scope = Play.configuration.getString("silhouette.github.scope")))
   }
 }
