@@ -13,6 +13,7 @@ import play.api.Play.current
 import models.daos.DBTableDefinitions._
 import play.Logger
 import org.joda.time.DateTimeZone
+import java.util.UUID
 
 class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
 
@@ -76,7 +77,7 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
     candidates.take(1)
   }
   
-  override def find(postId: Long): Post = {
+  override def find(postId: UUID): Post = {
     DB withSession { implicit session =>
       val p = (slickPosts filter(_.id === postId)).first
       val allUsers = userDAO.findAll
@@ -99,7 +100,7 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
     }
   }
   
-  override def delete(postId: Long) = {
+  override def delete(postId: UUID) = {
     DB withSession { implicit session =>
       (slickPosts filter(_.id === postId)).delete
       (slickComments filter(_.postId === postId)).delete
@@ -113,7 +114,7 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
     }
   }
   
-  override def addComment(postId: Long, comment: Comment) = {
+  override def addComment(postId: UUID, comment: Comment) = {
     DB withSession { implicit session =>
       slickComments.insert(DBComment(comment.id, comment.title, comment.body, comment.created.getMillis(), comment.edited.getMillis(), comment.author.userID.toString(), postId))
     }

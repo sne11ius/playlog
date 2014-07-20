@@ -22,6 +22,7 @@ import forms._
 import org.joda.time.format.DateTimeFormatter
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.DateTimeZone
+import java.util.UUID
 
 class Application @Inject() (userService: UserService, postService: PostService, implicit val env: Environment[User, CachedCookieAuthenticator])
     extends Controller with Silhouette[User, CachedCookieAuthenticator] {
@@ -31,7 +32,7 @@ class Application @Inject() (userService: UserService, postService: PostService,
       if (AdminIdentifiers.findAll.isEmpty) {
         Future.successful(Ok(views.html.plain()))
       } else {
-    	Future.successful(Ok(views.html.index(postService.findAllPublished(inTitle), request.identity)))
+    	Future.successful(Ok(views.html.index(FeedConfig, postService.findAllPublished(inTitle), request.identity)))
       }
     }
   }
@@ -39,7 +40,7 @@ class Application @Inject() (userService: UserService, postService: PostService,
   def singlePost(dateString: String, title: String) = UserAwareAction.async { implicit request =>
     DB.withSession { implicit session =>
       val date = DateTimeFormat.forPattern("yyyy-MM-dd").parseDateTime(dateString).withZone(DateTimeZone.UTC).withHourOfDay(0)
-      Future.successful(Ok(views.html.index(postService.findSinglePost(date, title), request.identity)))
+      Future.successful(Ok(views.html.index(FeedConfig, postService.findSinglePost(date, title), request.identity)))
     }
   }
   
@@ -51,7 +52,7 @@ class Application @Inject() (userService: UserService, postService: PostService,
   }
   
   def removePost = DBAction { implicit rs => {
-      val postId = Form("postId" -> text).bindFromRequest.get.toLong
+      val postId = UUID.fromString(Form("postId" -> text).bindFromRequest.get)
       postService.delete(postId)
       Redirect(routes.Application.index(None))
     }

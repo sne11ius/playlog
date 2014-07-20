@@ -21,6 +21,7 @@ import com.mohiva.play.silhouette.core.exceptions.AccessDeniedException
 import service.PostService
 import forms.CommentForm
 import org.joda.time.DateTime
+import java.util.UUID
 
 class CommentController @Inject() (postService: PostService, implicit val env: Environment[User, CachedCookieAuthenticator])
     extends Controller with Silhouette[User, CachedCookieAuthenticator] {
@@ -29,14 +30,14 @@ class CommentController @Inject() (postService: PostService, implicit val env: E
     CommentForm.form.bindFromRequest.fold (
       form => {
         Logger.debug("Bad request")
-        Future.successful(BadRequest(views.html.index(postService.findAllPublished(None), Some(request.identity))))
+        Future.successful(BadRequest(views.html.index(FeedConfig, postService.findAllPublished(None), Some(request.identity))))
       },
       data => {
         val author = request.identity
         val title = data.title
         val body = data.body
         val comment = Comment(None, title, body, new DateTime(), new DateTime(), author)
-        val postId = Form("postId" -> text).bindFromRequest.get.toLong
+        val postId = UUID.fromString(Form("postId" -> text).bindFromRequest.get)
         
         Logger.debug("Now adding the post comment: " + comment)
         Logger.debug("To post #" + postId)

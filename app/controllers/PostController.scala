@@ -24,6 +24,7 @@ import scala.concurrent.Future
 import models.daos.UserDAO
 import scala.concurrent.ExecutionContext.Implicits.global
 import service.PostService
+import java.util.UUID
 
 class PostController @Inject() (userDAO: UserDAO, postService: PostService, implicit val env: Environment[User, CachedCookieAuthenticator])
   extends Controller with Silhouette[User, CachedCookieAuthenticator] {
@@ -33,7 +34,7 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
       "title" -> nonEmptyText,
       "body" -> nonEmptyText,
       "published" -> boolean) {
-        (title, body, published) => Post(None, title, body, new DateTime, new DateTime, published, UserStub, List())
+        (title, body, published) => Post(UUID.randomUUID(), title, body, new DateTime, new DateTime, published, UserStub, List())
       } {
         post => Some(post.title, post.body, post.published)
       })
@@ -44,7 +45,7 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
 
   def editForm = Action {
     val existingPost = Post(
-      None, "faketitle", "fakebody", new DateTime, new DateTime, false, UserStub, List()
+      UUID.randomUUID(), "faketitle", "fakebody", new DateTime, new DateTime, false, UserStub, List()
     )
     Ok(html.composepost.form(createPostForm.fill(existingPost)))
   }
@@ -55,7 +56,7 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
 
   def importPosts = UserAwareAction.async { implicit request =>
     implicit val postReads: Reads[Post] = (
-      Reads.pure(None) and
+      Reads.pure(UUID.randomUUID()) and
       (__ \ "title").read[String] and
       (__ \ "body").read[String] and
       (__ \ "date").read[DateTime] and
@@ -78,7 +79,7 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
 
   def editPost = UserAwareAction.async { implicit request =>
     DB withSession { implicit session =>
-      val postId = Form("postId" -> text).bindFromRequest.get.toLong
+      val postId = UUID.fromString(Form("postId" -> text).bindFromRequest.get)
       val post = postService.find(postId)
       Future.successful(Ok(html.composepost.form(createPostForm.fill(post))))
     }
@@ -98,7 +99,7 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
               Logger.debug("Found user")
               if (user.get.get.isAdmin) {
                 Logger.debug("User is admin")
-                val post = Post(None, p.title, p.body, p.created, p.edited, p.published, user.get.get, List())
+                val post = Post(UUID.randomUUID(), p.title, p.body, p.created, p.edited, p.published, user.get.get, List())
                 postService.insert(post)
                 Logger.debug("post added")
                 Future.successful(Redirect(routes.Application.index(None)))

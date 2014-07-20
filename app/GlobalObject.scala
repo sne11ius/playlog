@@ -14,8 +14,10 @@ import scala.concurrent.Future
 import com.google.inject.Guice
 import controllers.routes
 import models.User
+import com.mohiva.play.htmlcompressor.HTMLCompressorFilter
+import com.googlecode.htmlcompressor.compressor.HtmlCompressor
 
-object Global extends GlobalSettings with SecuredSettings with Logger {
+object Global extends WithFilters(HTMLCompressorFilter()) with SecuredSettings with Logger {
   
   /**
    * The Guice dependencies injector.
@@ -58,4 +60,37 @@ object Global extends GlobalSettings with SecuredSettings with Logger {
   override def onRouteRequest(request: RequestHeader): Option[Handler] = {
     super.onRouteRequest(request)
   }
+}
+
+/**
+ * Defines a user-defined HTML compressor filter.
+ */
+object HTMLCompressorFilter {
+
+  /**
+   * Creates the HTML compressor filter.
+   *
+   * @return The HTML compressor filter.
+   */
+  def apply() = new HTMLCompressorFilter({
+    val compressor = new HtmlCompressor()
+
+    compressor.setRemoveComments(true);            //if false keeps HTML comments (default is true)
+    compressor.setRemoveMultiSpaces(true);         //if false keeps multiple whitespace characters (default is true)
+    compressor.setRemoveIntertagSpaces(true);      //removes iter-tag whitespace characters
+    compressor.setRemoveQuotes(true);              //removes unnecessary tag attribute quotes
+    compressor.setSimpleDoctype(true);             //simplify existing doctype
+    compressor.setRemoveScriptAttributes(true);    //remove optional attributes from script tags
+    compressor.setRemoveStyleAttributes(true);     //remove optional attributes from style tags
+    compressor.setRemoveLinkAttributes(true);      //remove optional attributes from link tags
+    compressor.setRemoveFormAttributes(true);      //remove optional attributes from form tags
+    compressor.setRemoveInputAttributes(true);     //remove optional attributes from input tags
+    compressor.setSimpleBooleanAttributes(true);   //remove values from boolean tag attributes
+    compressor.setRemoveJavaScriptProtocol(true);  //remove "javascript:" from inline event handlers
+    compressor.setRemoveHttpProtocol(true);        //replace "http://" with "//" inside tag attributes
+    compressor.setRemoveHttpsProtocol(true);       //replace "https://" with "//" inside tag attributes
+    compressor.setPreserveLineBreaks(false);        //preserves original line breaks
+    compressor.setRemoveSurroundingSpaces("html,a,div,ul,ol,li,br,p,nav"); //remove spaces around provided tags
+    compressor
+  })
 }
