@@ -31,7 +31,7 @@ class OAuth2InfoDAOSlick extends DelegableAuthInfoDAO[OAuth2Info] {
         ).first.id.get
         slickOAuth2Infos.filter(_.loginInfoId === infoId).firstOption match {
           case Some(info) =>
-            slickOAuth2Infos update DBOAuth2Info(info.id, authInfo.accessToken, authInfo.tokenType, authInfo.expiresIn, authInfo.refreshToken, infoId)
+            slickOAuth2Infos.filter(_.id === info.id) update DBOAuth2Info(info.id, authInfo.accessToken, authInfo.tokenType, authInfo.expiresIn, authInfo.refreshToken, infoId)
           case None => slickOAuth2Infos insert DBOAuth2Info(None, authInfo.accessToken, authInfo.tokenType, authInfo.expiresIn, authInfo.refreshToken, infoId) 
         }
         authInfo
