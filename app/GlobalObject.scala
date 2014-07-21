@@ -16,8 +16,9 @@ import controllers.routes
 import models.User
 import com.mohiva.play.htmlcompressor.HTMLCompressorFilter
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor
+import com.mohiva.play.xmlcompressor.XMLCompressorFilter
 
-object Global extends WithFilters(HTMLCompressorFilter()) with SecuredSettings with Logger {
+object Global extends WithFilters(HTMLCompressorFilter(), XMLCompressorFilter()) with SecuredSettings with Logger {
   
   /**
    * The Guice dependencies injector.
