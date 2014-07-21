@@ -16,7 +16,7 @@ libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "2.3",
   "org.joda" % "joda-convert" % "1.5",
   "mysql" % "mysql-connector-java" % "5.1.18",
-  "com.mohiva" %% "play-html-compressor" % "0.3",
+  "com.mohiva" %% "play-html-compressor" % "0.3.1",
   cache
 )
 
