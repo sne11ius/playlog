@@ -2,27 +2,27 @@
 
 @import com.mohiva.play.silhouette.core.providers._
 @import forms._
-
-<h2>@Html(post.title)</h2>
-<span class="pull-right">Created: @formatJoda(post.created)<br>Edited: @formatJoda(post.edited)<!--br>Author: @post.author.fullName<br><img style="width:20px" src="@post.author.avatarURL"--><br><a href="@permalink(config, post)" class="btn btn-default btn-xs">Link</a></span>
-<p>@Html(post.body)</p>
-@user.map { u =>
-  @if(u.isAdmin) {
-    <div class="form-group">
-      @helper.form(action = routes.Application.removePost) {
-        <input type="hidden" name="postId" value="@post.id">
-        <button id="submit" type="submit" value="submit" class="btn btn-danger">Eintrag löschen</button>
-      }
-      @helper.form(action = routes.EditPostController.editExistingPost(post.id)) {
-        <input type="hidden" name="postId" value="@post.id">
-        <button id="submit" type="submit" value="submit" class="btn btn-primary">Eintrag bearbeiten</button>
-      }
-    </div>
-  }
-}.getOrElse {
-}
-<div class="fb-like" data-href="@permalink(config, post)" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
-<div class="g-plusone" data-size="medium" data-annotation="inline" data-width="300" data-href="@permalink(config, post)"></div>
-<a href="https://twitter.com/share" class="twitter-share-button" data-url="@permalink(config, post)">Tweet</a>
-@commentPanel(post, CommentForm.form, user)
-<hr>
+<div class="post-container" id="@post.id">
+	<h2>@Html(post.title)</h2>
+	<span class="pull-right">Created: @formatJoda(post.created)<br>Edited: @formatJoda(post.edited)<!--br>Author: @post.author.fullName<br><img style="width:20px" src="@post.author.avatarURL"--><br><a href="@permalink(config, post)" class="btn btn-default btn-xs">Link</a></span>
+	<p>@Html(post.body)</p>
+	@user.map { u =>
+	  @if(u.isAdmin) {
+	    <div class="form-group">
+	      @helper.form(action = routes.Application.removePost) {
+	        <input type="hidden" name="postId" value="@post.id">
+	        <button id="submit" type="submit" value="submit" class="btn btn-danger">Eintrag löschen</button>
+	      }
+	      @helper.form(action = routes.EditPostController.editExistingPost(post.id)) {
+	        <input type="hidden" name="postId" value="@post.id">
+	        <button id="submit" type="submit" value="submit" class="btn btn-primary">Eintrag bearbeiten</button>
+	      }
+	    </div>
+	  }
+	}.getOrElse {
+	}
+	<div class="fb-like" data-href="@permalink(config, post)" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+	<div class="g-plusone" data-size="medium" data-annotation="inline" data-width="300" data-href="@permalink(config, post)"></div>
+	<a href="https://twitter.com/share" class="twitter-share-button" data-url="@permalink(config, post)">Tweet</a>
+	@commentPanel(post, CommentForm.form, user)
+</div>
