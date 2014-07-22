@@ -17,7 +17,8 @@ libraryDependencies ++= Seq(
   "org.joda" % "joda-convert" % "1.5",
   "mysql" % "mysql-connector-java" % "5.1.18",
   "com.mohiva" %% "play-html-compressor" % "0.3",
-  cache
+  cache,
+  filters
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
