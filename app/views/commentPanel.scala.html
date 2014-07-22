@@ -3,8 +3,8 @@
 @import bootstrap._
 @import com.mohiva.play.silhouette.core.providers._
 
-<div class="well well-small">
-  <h3>Comments for post #@post.id</h3>
+<div class="comments">
+  <h3>Comments</h3>
   @user match {
     case Some(user) => {
       <fieldset>
@@ -22,7 +22,7 @@
       </fieldset>
     }
     case None => {
-      <div class="well well-small">Sign in to post a comment:
+      <div class="sign-in-hint">Sign in to post a comment:
         @defining(env.providers.values.filter(_.isInstanceOf[SocialProvider[_]])) { providers =>
           @if(!providers.isEmpty) {
             @for(p <- providers) {
