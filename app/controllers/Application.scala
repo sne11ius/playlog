@@ -39,6 +39,10 @@ class Application @Inject() (userService: UserService, postService: PostService,
     }
   }
   
+  def about = Action {
+    Ok(views.html.about())
+  }
+  
   def singlePost(dateString: String, title: String) = UserAwareAction.async { implicit request =>
     DB.withSession { implicit session =>
       val date = DateTimeFormat.forPattern("yyyy-MM-dd").parseDateTime(dateString).withZone(DateTimeZone.UTC).withHourOfDay(0)
