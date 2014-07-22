@@ -74,7 +74,7 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
       })
     }
     Logger.debug("...done")
-    Future.successful(Redirect(routes.Application.index(None)))
+    Future.successful(Redirect(routes.Application.index(None, None, None)))
   }
 
   def editPost = UserAwareAction.async { implicit request =>
@@ -102,11 +102,11 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
                 val post = Post(UUID.randomUUID(), p.title, p.body, p.created, p.edited, p.published, user.get.get, List())
                 postService.insert(post)
                 Logger.debug("post added")
-                Future.successful(Redirect(routes.Application.index(None)))
+                Future.successful(Redirect(routes.Application.index(None, None, None)))
               }
             }
           }
-          Future.successful(Redirect(routes.Application.index(None)))
+          Future.successful(Redirect(routes.Application.index(None, None, None)))
         }
       })
   }

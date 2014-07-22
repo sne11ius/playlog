@@ -27,10 +27,14 @@ import java.util.UUID
 class Application @Inject() (userService: UserService, postService: PostService, implicit val env: Environment[User, CachedCookieAuthenticator])
     extends Controller with Silhouette[User, CachedCookieAuthenticator] {
   
-  def index(inTitle: Option[String]) = UserAwareAction.async { implicit request =>
+  def index(inTitle: Option[String], start: Option[Int], numItems: Option[Int]) = UserAwareAction.async { implicit request =>
     DB.withSession { implicit session =>
       if (AdminIdentifiers.findAll.isEmpty) {
         Future.successful(Ok(views.html.plain()))
+      } else if (start.isDefined && numItems.isDefined) {
+        Logger.debug("Paging: start=" + start.get + " numItems=" + numItems.get)
+        val posts = postService.findAllPublished(start.get, numItems.get)
+    	Future.successful(Ok(views.html.index(FeedConfig, FeedConfig.title, posts, request.identity)))
       } else {
         val posts = postService.findAllPublished(inTitle)
         val title = if (1 == posts.length) posts(0).title.replaceAll("\\<.*?\\>", "").replaceAll("\\&.*?\\;", "") + " - wasis.nu/mit/blog" else FeedConfig.title
@@ -55,14 +59,14 @@ class Application @Inject() (userService: UserService, postService: PostService,
   def removeAll = SecuredAction.async { implicit request =>
     DB.withSession { implicit session =>
       postService.deleteAll
-      Future.successful(Redirect(routes.Application.index(None)))
+      Future.successful(Redirect(routes.Application.index(None, None, None)))
     }
   }
   
   def removePost = DBAction { implicit rs => {
       val postId = UUID.fromString(Form("postId" -> text).bindFromRequest.get)
       postService.delete(postId)
-      Redirect(routes.Application.index(None))
+      Redirect(routes.Application.index(None, None, None))
     }
   }
   
@@ -73,7 +77,7 @@ class Application @Inject() (userService: UserService, postService: PostService,
    */
   def signUp = UserAwareAction.async { implicit request =>
     request.identity match {
-      case Some(user) => Future.successful(Redirect(routes.Application.index(None)))
+      case Some(user) => Future.successful(Redirect(routes.Application.index(None, None, None)))
       case None => Future.successful(Ok(views.html.signUp(SignUpForm.form)))
     }
   }

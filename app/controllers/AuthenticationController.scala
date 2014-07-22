@@ -26,7 +26,7 @@ class AuthenticationController @Inject() (implicit val env: Environment[User, Ca
    */
   def signIn = UserAwareAction.async { implicit request =>
     request.identity match {
-      case Some(user) => Future.successful(Redirect(routes.Application.index(None)))
+      case Some(user) => Future.successful(Redirect(routes.Application.index(None, None, None)))
       case None => Future.successful(Ok(views.html.signIn(SignInForm.form)))
     }
   }
@@ -38,7 +38,7 @@ class AuthenticationController @Inject() (implicit val env: Environment[User, Ca
    */
   def signUp = UserAwareAction.async { implicit request =>
     request.identity match {
-      case Some(user) => Future.successful(Redirect(routes.Application.index(None)))
+      case Some(user) => Future.successful(Redirect(routes.Application.index(None, None, None)))
       case None => Future.successful(Ok(views.html.signUp(SignUpForm.form)))
     }
   }
@@ -50,6 +50,6 @@ class AuthenticationController @Inject() (implicit val env: Environment[User, Ca
    */
   def signOut = SecuredAction.async { implicit request =>
     env.eventBus.publish(LogoutEvent(request.identity, request, request2lang))
-    Future.successful(env.authenticatorService.discard(Redirect(routes.Application.index(None))))
+    Future.successful(env.authenticatorService.discard(Redirect(routes.Application.index(None, None, None))))
   }
 }
