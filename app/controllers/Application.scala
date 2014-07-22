@@ -35,12 +35,19 @@ class Application @Inject() (userService: UserService, postService: PostService,
         //Logger.debug("Paging: start=" + start.get + " numItems=" + numItems.get)
         val posts = postService.findAllPublished(start.get, numItems.get)
         val numPosts = postService.countAllPublished
-        val numPages = ((numPosts:Float)/numItems.get).ceil.toInt
+        val numPages = ((numPosts:Float) / numItems.get).ceil.toInt
     	Future.successful(Ok(views.html.index(FeedConfig, FeedConfig.title, posts, request.identity, Some(PaginationInfo(start.get, numItems.get, numPages)))))
-      } else {
+      } else if (inTitle.isDefined) {
         val posts = postService.findAllPublished(inTitle)
         val title = if (1 == posts.length) posts(0).title.replaceAll("\\<.*?\\>", "").replaceAll("\\&.*?\\;", "") + " - wasis.nu/mit/blog" else FeedConfig.title
     	Future.successful(Ok(views.html.index(FeedConfig, title, posts, request.identity)))
+      } else {
+        val start = 0
+        val numItems = 5
+        val posts = postService.findAllPublished(start, numItems)
+        val numPosts = postService.countAllPublished
+        val numPages = ((numPosts:Float) / numItems).ceil.toInt
+    	Future.successful(Ok(views.html.index(FeedConfig, FeedConfig.title, posts, request.identity, Some(PaginationInfo(start, numItems, numPages)))))
       }
     }
   }
