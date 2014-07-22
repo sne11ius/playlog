@@ -1,0 +1,32 @@
+@(user: User)
+<div class="about-you" id="about-you">
+  <label for="about-you">about you</label>
+  <h5>What I know about you:</h5>
+  <table>
+    <tr>
+      <td class="lbl">Firstname:</td>
+      <td class="val">@user.firstName.getOrElse("[unknown]")</td>
+    </tr>
+    <tr>
+      <td class="lbl">Lastname:</td>
+      <td class="val">@user.lastName.getOrElse("[unknown]")</td>
+    </tr>
+    <tr>
+      <td class="lbl">Fullname:</td>
+      <td class="val">@user.fullName.getOrElse("[unknown]")</td>
+    </tr>
+    <tr>
+      <td class="lbl">email:</td>
+      <td class="val">@user.email.getOrElse("[unknown]")</td>
+    </tr>
+    <tr>
+      <td class="lbl">Avatar:</td>
+      <td class="val"><img src="@user.avatarURL" with="16px" height="16px"></td>
+    </tr>
+    <tr>
+      <td class="lbl">Login via:</td>
+      <td class="val">@user.loginInfo.providerID</td>
+    </tr>
+  </table>
+  <a href="@routes.AuthenticationController.signOut" class="signout-button btn btn-default btn-sm">Sign out</a>
+</div>

@@ -58,6 +58,9 @@
 		</div>
 	</header>
 	</div>
+	@if(user.isDefined) {
+	  @aboutYou(user.get)
+  }
 	<div class="container">
 		<div class="content">
 			<div class="row">
@@ -71,6 +74,18 @@
 	<script src="@routes.Assets.at("javascripts/lang-clj.js")"></script>
 	<script>
     prettyPrint();
+	</script>
+	<script>
+	  jQuery('#about-you label').on('click', function() {
+	    var $el = jQuery('#about-you');
+	    if ($el.data("show")) {
+	    	$el.animate({'right':'-1px'})
+	      $el.data("show", false);
+	    } else {
+	    	$el.animate({'right':'-266px'})
+	      $el.data("show", true);
+	    }
+	  });
 	</script>
 	<script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
