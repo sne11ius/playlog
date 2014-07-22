@@ -68,11 +68,11 @@
 			</div>
 		</div>
 	</div>
-	<script async src="@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))"></script>
+	<script src="@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))"></script>
 	<script async src="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))"></script>
-	<script async src="@routes.Assets.at("javascripts/prettify.min.js")"></script>
-	<script async src="@routes.Assets.at("javascripts/lang-clj.js")"></script>
-	<script async>
+	<script src="@routes.Assets.at("javascripts/prettify.min.js")"></script>
+	<script src="@routes.Assets.at("javascripts/lang-clj.js")"></script>
+	<script>
     prettyPrint();
 	</script>
 	<script async>
@@ -109,7 +109,7 @@
     if (d.getElementById(id)) return;
     js = d.createElement(s); js.id = id;
     js.src = "//connect.facebook.net/de_DE/sdk.js#xfbml=1&appId=269911819871952&version=v2.0";
-    a.async = 1;
+    js.async = 1;
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));</script>
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
