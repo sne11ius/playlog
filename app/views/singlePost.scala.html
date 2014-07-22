@@ -25,6 +25,9 @@
 	}
 	<div class="interaction">
 		<div class="row">
+      <div class="col-md-2">
+        <a href="@permalink(config, post)" class="btn btn-default btn-xs">Permalink</a>
+      </div>
 	    <div class="col-md-4">
 			  <div class="fb-like" data-href="@permalink(config, post)" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
 		  </div>
@@ -33,9 +36,6 @@
 	    </div>
 	    <div class="col-md-2">
 			  <a href="https://twitter.com/share" class="twitter-share-button" data-url="@permalink(config, post)">Tweet</a>
-	    </div>
-	    <div class="col-md-2">
-			  <a href="@permalink(config, post)" class="btn btn-default btn-xs">Permalink</a>
 	    </div>
 		</div>
 		@commentPanel(post, CommentForm.form, user)

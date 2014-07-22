@@ -4,21 +4,20 @@
 @import com.mohiva.play.silhouette.core.providers._
 
 <div class="comments">
-  <h3>Comments</h3>
   @user match {
     case Some(user) => {
       <fieldset>
-		    <legend class="">Add a comment</legend>
-		    @helper.form(action = routes.CommentController.addComment()) {
-		      @text(commentForm("title"), "Titel")
-		      @text(commentForm("body"), "Body")
-		      <input type="hidden" name="postId" value="@post.id">
-		      <div class="form-group">
-		        <div class="">
-		          <button id="submit" type="submit" value="submit" class="btn btn-primary btn-block">Absenden</button>
-		        </div>
-		      </div>
-	      }
+        <legend class="">Add a comment</legend>
+        @helper.form(action = routes.CommentController.addComment()) {
+          @text(commentForm("title"), "Titel")
+          @text(commentForm("body"), "Body")
+          <input type="hidden" name="postId" value="@post.id">
+          <div class="form-group">
+            <div class="">
+              <button id="submit" type="submit" value="submit" class="btn btn-primary btn-block">Absenden</button>
+            </div>
+          </div>
+        }
       </fieldset>
     }
     case None => {
@@ -26,7 +25,10 @@
         @defining(env.providers.values.filter(_.isInstanceOf[SocialProvider[_]])) { providers =>
           @if(!providers.isEmpty) {
             @for(p <- providers) {
-              <a href="@routes.SocialAuthController.authenticate(p.id)"><img src="@routes.Assets.at(s"images/providers/${p.id}.png")" style="width:16px;height:16px;"></a>
+              <!--a href="@routes.SocialAuthController.authenticate(p.id)"><img src="@routes.Assets.at(s"images/providers/${p.id}.png")" style="width:16px;height:16px;"></a-->
+              <a class="btn btn-social-icon btn-sm btn-@(p.id + (if (p.id.contains("google")) "-plus" else ""))" href="@routes.SocialAuthController.authenticate(p.id)">
+						    <i class="fa fa-@(p.id + (if (p.id.contains("google")) "-plus" else ""))"></i>
+						  </a>
             }
           }
         }
@@ -39,7 +41,7 @@
     <h3>@post.comments.length Comment@("s".when(post.comments.length > 1)):</h3>
     @for(comment <- post.comments) {
       <span class="pull-right">
-        Created: @formatJoda(comment.created) | Edited: @formatJoda(comment.edited) | Id: @comment.id | Author: @comment.author.fullName | <img style="width:20px" src="@comment.author.avatarURL">
+        Created: @formatJoda(comment.created) | Author: @comment.author.fullName | <img style="width:20px" src="@comment.author.avatarURL">
       </span>
       <h4>@comment.title</h4>
       <div>@comment.body</div>
