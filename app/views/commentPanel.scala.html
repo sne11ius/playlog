@@ -3,7 +3,7 @@
 @import bootstrap._
 @import com.mohiva.play.silhouette.core.providers._
 
-<div class="comments">
+<div class="comments" id="comments@post.id">
   @user match {
     case Some(user) => {
       <fieldset>
