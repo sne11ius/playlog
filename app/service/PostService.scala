@@ -15,6 +15,10 @@ trait PostService {
 
   def findAllPublished(inTitle: Option[String]): List[Post]
   
+  def findAllPublished(maxResults: Int, startIndex: Int): List[Post]
+  
+  def countAllPublished: Int
+  
   def findSinglePost(date: DateTime, title: String): List[Post]
   
   def find(postId: UUID): Post

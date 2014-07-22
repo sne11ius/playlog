@@ -61,6 +61,24 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
     }
   }
   
+  def findAllPublished(startIndex: Int, maxResults: Int): List[Post] = {
+    val allUsers = userDAO.findAll
+    DB withSession { implicit session =>
+	  (slickPosts.sortBy(p => p.created.desc).filter(_.published === true).drop(startIndex).take(maxResults) list).map(p => {
+		val comments = slickComments.sortBy(c => c.created.desc).filter(_.postId === p.id).list.map(c =>
+		  Comment(c.id, c.title, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
+		)
+		Post(p.id, p.title, p.body, new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
+	  })
+    }
+  }
+  
+  def countAllPublished: Int = {
+    DB withSession { implicit session =>
+      slickPosts.sortBy(p => p.created.desc).filter(_.published === true).length.run
+    }
+  }
+
   override def findSinglePost(date: DateTime, title: String): List[Post] = {
     val allPublished = findAllPublished(Some(title))
     //Logger.debug("Num all: " + allPublished.length)
