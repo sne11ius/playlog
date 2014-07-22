@@ -32,9 +32,11 @@ class Application @Inject() (userService: UserService, postService: PostService,
       if (AdminIdentifiers.findAll.isEmpty) {
         Future.successful(Ok(views.html.plain()))
       } else if (start.isDefined && numItems.isDefined) {
-        Logger.debug("Paging: start=" + start.get + " numItems=" + numItems.get)
+        //Logger.debug("Paging: start=" + start.get + " numItems=" + numItems.get)
         val posts = postService.findAllPublished(start.get, numItems.get)
-    	Future.successful(Ok(views.html.index(FeedConfig, FeedConfig.title, posts, request.identity)))
+        val numPosts = postService.countAllPublished
+        val numPages = ((numPosts:Float)/numItems.get).ceil.toInt
+    	Future.successful(Ok(views.html.index(FeedConfig, FeedConfig.title, posts, request.identity, Some(PaginationInfo(start.get, numItems.get, numPages)))))
       } else {
         val posts = postService.findAllPublished(inTitle)
         val title = if (1 == posts.length) posts(0).title.replaceAll("\\<.*?\\>", "").replaceAll("\\&.*?\\;", "") + " - wasis.nu/mit/blog" else FeedConfig.title

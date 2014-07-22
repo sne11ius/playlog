@@ -1,4 +1,4 @@
-@(config: FeedConfig, title: String, posts: List[Post], user: Option[User] = None)(implicit env: com.mohiva.play.silhouette.core.Environment[User, _], request: RequestHeader)
+@(config: FeedConfig, title: String, posts: List[Post], user: Option[User] = None, paginationInfo: Option[PaginationInfo] = None)(implicit env: com.mohiva.play.silhouette.core.Environment[User, _], request: RequestHeader)
 
 @import com.mohiva.play.silhouette.core.providers._
 
@@ -6,4 +6,7 @@
   @for(post <- posts) {
     @singlePost(post, config, user)
   }
+	@if(paginationInfo.isDefined) {
+	  @paginator(paginationInfo.get)
+	}
 }

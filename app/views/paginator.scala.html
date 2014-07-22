@@ -1,0 +1,26 @@
+@(paginationInfo: PaginationInfo)
+<!--
+start: @paginationInfo.start<br>
+numItems: @paginationInfo.numItems<br>
+numPages: @paginationInfo.numPages<br>
+-->
+<div class="paginator">
+  @if(0 != paginationInfo.start) {
+    <a href="@routes.Application.index(None, Some(paginationInfo.start - paginationInfo.numItems), Some(paginationInfo.numItems))"><i class="fa fa-arrow-circle-left"></i></a>
+  }
+  <span class="pages">
+	  @for(currentIndex <- 0 until paginationInfo.numPages) {
+	    @if(currentIndex * paginationInfo.numItems == paginationInfo.start) {
+	      <span class="current">@(currentIndex + 1)</span>
+	    } else {
+	      <a href="@routes.Application.index(None, Some(currentIndex * paginationInfo.numItems), Some(paginationInfo.numItems))">@(currentIndex + 1)</a>
+	    }
+	    @if(currentIndex+1 < paginationInfo.numPages) {
+        |
+      }
+	  }
+  </span>
+  @if(paginationInfo.numPages != paginationInfo.start) {
+    <a href="@routes.Application.index(None, Some(paginationInfo.start + paginationInfo.numItems), Some(paginationInfo.numItems))"><i class="fa fa-arrow-circle-right"></i></a>
+  }
+</div>
