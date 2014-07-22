@@ -4,16 +4,18 @@
 <html>
 <head>
 	<title>@title</title>
-	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
 	<link rel="stylesheet" href="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.css"))">
 	<link rel="stylesheet" href="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap-theme.min.css"))">
-	<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+	<link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.min.css")">
+	<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap-social.css")">
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Vollkorn' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
 </head>
 <body>
+  <div id="fb-root"></div>
 	<header class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container">
 			<div class="navbar-header">
@@ -23,13 +25,9 @@
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="@routes.Application.index(None)">wasis.nu/mit/blog</a>
+				<a class="navbar-brand" href="@routes.Application.index(None)">wasis.nu/mit<wbr>/blog?</a>
 			</div>
 			<nav class="collapse navbar-collapse">
-				<!--ul class="nav navbar-nav">
-					<li><a href="@routes.Application.index(None)">Home</a></li>
-					<li><a href="https://github.com/sne11ius/playlog">GitHub</a></li>
-				</ul-->
 				<ul class="nav navbar-nav navbar-right">
 					@user.map { u =>
             @if(u.isAdmin) {
@@ -46,13 +44,15 @@
                   <a href="@routes.AdminController.index">Benutzer anzeigen</a>
               </li>
             }
-					  <li><a href="#">@u.fullName</a></li>
-					  <li><a href="@routes.AuthenticationController.signOut">Sign Out</a></li>
+            <!-- li><a href="#">@u.fullName</a></li-->
+            <li>Loggin in as: @u.fullName</a></li>
+					  <!-- li><a href="@routes.AuthenticationController.signOut">Sign Out</a></li-->
 					}.getOrElse {
-						<li><a href="@routes.AuthenticationController.signIn">Sign In</a></li>
-						<li><a href="@routes.AuthenticationController.signUp">Sign Up</a></li>
+						<!-- li><a href="@routes.AuthenticationController.signIn">Sign In</a></li>
+						<li><a href="@routes.AuthenticationController.signUp">Sign Up</a></li-->
 					}
-					<li><a href="@routes.AtomFeedController.createAtomFeed">Atom Feed</a></li>
+          <li><a class="" href="@routes.Application.about"><i class="fa fa-info-circle fa-4" style="font-size: 22px;"></i></a></li>
+					<li><a class="syndication-link" href="@routes.AtomFeedController.createAtomFeed"></a></li>
 				</ul>
 			</nav>
 		</div>
@@ -65,7 +65,36 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript" src="@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))"></script>
-	<script type="text/javascript" src="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))"></script>
+	<script src="@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))"></script>
+	<script src="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))"></script>
+	<script src="@routes.Assets.at("javascripts/prettify.min.js")"></script>
+	<script src="@routes.Assets.at("javascripts/lang-clj.js")"></script>
+	<script>
+    prettyPrint();
+	</script>
+	<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-39708123-1', 'wasis.nu');
+    ga('send', 'pageview');
+   </script>
+	<script type="text/javascript">
+    window.___gcfg = {lang: 'de'};
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/platform.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+  <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/de_DE/sdk.js#xfbml=1&appId=269911819871952&version=v2.0";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 </body>
 </html>

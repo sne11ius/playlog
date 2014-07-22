@@ -1,6 +1,1 @@
-@(config: FeedConfig, post: Post)
-@{
-  val titlePart = post.title.replaceAll("\\<.*?\\>", "").replaceAll("\\&.*?\\;", "").replaceAll(" ", "-")
-  val datePart = post.created.toString("yyyy-MM-dd")
-  config.baseUrl + "/" + datePart + "/" + titlePart
-}
+@(config: FeedConfig, post: Post)@{val titlePart = post.title.replaceAll("\\<.*?\\>", "").replaceAll("\\&.*?\\;", "").replaceAll(" ", "-");val datePart = post.created.toString("yyyy-MM-dd");config.baseUrl + "/" + datePart + "/" + titlePart;}

@@ -2,40 +2,42 @@
 
 @import com.mohiva.play.silhouette.core.providers._
 @import forms._
-
-@user match {
-  case Some(user) => {}
-  case None => {
-    <span class="pull-right">
-      @defining(env.providers.values.filter(_.isInstanceOf[SocialProvider[_]])) { providers =>
-        @if(!providers.isEmpty) {
-          @for(p <- providers) {
-            <a href="@routes.SocialAuthController.authenticate(p.id)"><img src="@routes.Assets.at(s"images/providers/${p.id}.png")" style="width:16px;height:16px;"></a>
-          }
-        }
-      }
-    </span>
-  }
-}
-
-<h2>@Html(post.title)</h2>
-<span class="pull-right">Created: @formatJoda(post.created)<br>Edited: @formatJoda(post.edited)<br>Id: @post.id<br>Author: @post.author.fullName<br><img style="width:20px" src="@post.author.avatarURL"><br><a href="@permalink(config, post)" class="btn btn-default btn-xs">Link</a></span>
-<p>@Html(post.body)</p>
-@user.map { u =>
-  @if(u.isAdmin) {
-    <div class="form-group">
-      @helper.form(action = routes.Application.removePost) {
-        <input type="hidden" name="postId" value="@post.id">
-        <button id="submit" type="submit" value="submit" class="btn btn-danger">Eintrag löschen</button>
-      }
-      @helper.form(action = routes.EditPostController.editExistingPost(post.id)) {
-        <input type="hidden" name="postId" value="@post.id">
-        <button id="submit" type="submit" value="submit" class="btn btn-primary">Eintrag bearbeiten</button>
-      }
-    </div>
-  }
-}.getOrElse {
-  <div class="well well-small">You are not signed in and cannot do anything.</div>
-}
-@commentPanel(post, CommentForm.form, user)
-<hr>
+<div class="post-container" id="@post.id">
+  <div class="header">
+		<h2>@Html(post.title)</h2>
+		<span class="pull-right"><span class="lbl">Created: </span>@formatJoda(post.created)<br><span class="lbl">Edited: </span>@formatJoda(post.edited)</span>
+	</div>
+	<p>@Html(post.body)</p>
+	@user.map { u =>
+	  @if(u.isAdmin) {
+	    <div class="form-group">
+	      @helper.form(action = routes.Application.removePost) {
+	        <input type="hidden" name="postId" value="@post.id">
+	        <button id="submit" type="submit" value="submit" class="btn btn-danger">Eintrag löschen</button>
+	      }
+	      @helper.form(action = routes.EditPostController.editExistingPost(post.id)) {
+	        <input type="hidden" name="postId" value="@post.id">
+	        <button id="submit" type="submit" value="submit" class="btn btn-primary">Eintrag bearbeiten</button>
+	      }
+	    </div>
+	  }
+	}.getOrElse {
+	}
+	<div class="interaction">
+		<div class="row">
+      <div class="col-md-2">
+        <a href="@permalink(config, post)" class="btn btn-default btn-xs">Permalink</a>
+      </div>
+	    <div class="col-md-4">
+			  <div class="fb-like" data-href="@permalink(config, post)" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+		  </div>
+	    <div class="col-md-2">
+			  <div class="g-plusone" data-size="medium" data-annotation="inline" data-width="300" data-href="@permalink(config, post)"></div>
+	    </div>
+	    <div class="col-md-2">
+			  <a href="https://twitter.com/share" class="twitter-share-button" data-url="@permalink(config, post)">Tweet</a>
+	    </div>
+		</div>
+		@commentPanel(post, CommentForm.form, user)
+	</div>
+</div>
