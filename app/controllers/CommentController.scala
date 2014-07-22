@@ -44,6 +44,6 @@ class CommentController @Inject() (postService: PostService, implicit val env: E
         postService.addComment(postId, comment)
       }
     )
-    Future.successful(Redirect(routes.Application.index(None)))
+    Future.successful(Redirect(routes.Application.index(None, None, None)))
   }
 }

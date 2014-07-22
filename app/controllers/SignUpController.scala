@@ -63,7 +63,7 @@ class SignUpController @Inject() (
             case Some(authenticator) =>
               env.eventBus.publish(SignUpEvent(user, request, request2lang))
               env.eventBus.publish(LoginEvent(user, request, request2lang))
-              env.authenticatorService.send(authenticator, Redirect(routes.Application.index(None)))
+              env.authenticatorService.send(authenticator, Redirect(routes.Application.index(None, None, None)))
             case None => throw new AuthenticationException("Couldn't create an authenticator")
           }
         }
