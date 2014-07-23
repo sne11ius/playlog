@@ -34,9 +34,8 @@ class CommentController @Inject() (postService: PostService, implicit val env: E
       },
       data => {
         val author = request.identity
-        val title = data.title
         val body = data.body
-        val comment = Comment(None, title, body, new DateTime(), new DateTime(), author)
+        val comment = Comment(None, body, new DateTime(), new DateTime(), author)
         val postId = UUID.fromString(Form("postId" -> text).bindFromRequest.get)
         
         Logger.debug("Now adding the post comment: " + comment)

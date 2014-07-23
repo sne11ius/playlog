@@ -22,7 +22,7 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
       val allUsers = userDAO.findAll
       slickPosts.sortBy(p => p.created.desc).list.map(p => {
         val comments = slickComments.sortBy(c => c.created.desc).filter(_.postId === p.id).list.map(c =>
-          Comment(c.id, c.title, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
+          Comment(c.id, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
         )
         Post(p.id, p.title, p.body, new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
       })
@@ -36,7 +36,7 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
         case None =>
 	      (slickPosts.sortBy(p => p.created.desc).filter(_.published === true) list).map(p => {
 	        val comments = slickComments.sortBy(c => c.created.desc).filter(_.postId === p.id).list.map(c =>
-	          Comment(c.id, c.title, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
+	          Comment(c.id, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
 	        )
 	        Post(p.id, p.title, p.body, new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
 	      })
@@ -54,7 +54,7 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
         	  strings.forall(s => p.title.toLowerCase contains s)
           }).map(p => {
 	        val comments = slickComments.sortBy(c => c.created.desc).filter(_.postId === p.id).list.map(c =>
-	          Comment(c.id, c.title, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
+	          Comment(c.id, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
 	        )
 	        Post(p.id, p.title, p.body, new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
 	      })
@@ -68,7 +68,7 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
     DB withSession { implicit session =>
 	  (slickPosts.sortBy(p => p.created.desc).filter(_.published === true).drop(startIndex).take(maxResults) list).map(p => {
 		val comments = slickComments.sortBy(c => c.created.desc).filter(_.postId === p.id).list.map(c =>
-		  Comment(c.id, c.title, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
+		  Comment(c.id, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
 		)
 		Post(p.id, p.title, p.body, new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
 	  })
@@ -102,7 +102,7 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
       val p = (slickPosts filter(_.id === postId)).first
       val allUsers = userDAO.findAll
       val comments = slickComments.sortBy(c => c.created.desc).filter(_.postId === postId).list.map(c =>
-        Comment(c.id, c.title, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
+        Comment(c.id, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
       )
       Post(p.id, p.title, p.body, new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
     }
@@ -136,7 +136,7 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
   
   override def addComment(postId: UUID, comment: Comment) = {
     DB withSession { implicit session =>
-      slickComments.insert(DBComment(comment.id, comment.title, comment.body, comment.created.getMillis(), comment.edited.getMillis(), comment.author.userID.toString(), postId))
+      slickComments.insert(DBComment(comment.id, comment.body, comment.created.getMillis(), comment.edited.getMillis(), comment.author.userID.toString(), postId))
     }
   }
 }
