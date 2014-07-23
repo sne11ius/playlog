@@ -60,7 +60,7 @@ class Application @Inject() (userService: UserService, postService: PostService,
     DB.withSession { implicit session =>
       val date = DateTimeFormat.forPattern("yyyy-MM-dd").parseDateTime(dateString).withZone(DateTimeZone.UTC).withHourOfDay(0)
       val searchTitle = java.net.URLDecoder.decode(title, "UTF-8")
-      Logger.debug("searchTitle: " + searchTitle)
+      //Logger.debug("searchTitle: " + searchTitle)
       val singlePost = postService.findSinglePost(date, searchTitle)
       if (0 == singlePost.length) {
         Future.successful(NotFound(views.html.notFound()))
