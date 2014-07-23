@@ -43,7 +43,7 @@
     @for(comment <- post.comments) {
       <div class="single-comment">
 	      <span class="pull-right">
-	        Created: @formatJoda(comment.created) | Author: @comment.author.fullName | <img style="width:20px" src="@comment.author.avatarURL">
+	        @comment.author.fullName @@ @formatJoda(comment.created) <img style="width:40px" src="@comment.author.avatarURL">
 	      </span>
 	      <div>@comment.body</div>
       </div>
