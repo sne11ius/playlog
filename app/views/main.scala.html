@@ -76,16 +76,33 @@
     prettyPrint();
 	</script>
 	<script>
-	  jQuery('#about-you label').on('click', function() {
-	    var $el = jQuery('#about-you');
-	    if ($el.data("show")) {
-	    	$el.animate({'right':'-1px'})
-	      $el.data("show", false);
-	    } else {
-	    	$el.animate({'right':'-266px'})
-	      $el.data("show", true);
-	    }
-	  });
+	  /* Setup animation for about you panel */
+	  (function() {
+		  var $el = jQuery('#about-you');
+		  if (!$el.length) {
+			  /* not logged in */
+			  return;
+		  }
+		  /* Initially: hide panel */
+	    $el.css('right', '-' + ($el.outerWidth() + 25) + 'px');
+      /* Init hide/show mode */
+      $el.data("show", true);
+      var right = '-' + ($el.outerWidth() + 1) + 'px';
+      /* Show panel after some time... */
+		  window.setTimeout(function() {
+			  $el.animate({'right': right}, 1000);
+		  }, 7000);
+	    jQuery('#about-you label').on('click', function() {
+	      var $el = jQuery('#about-you');
+	      if ($el.data("show")) {
+	        $el.animate({'right': '-1px'})
+	        $el.data("show", false);
+	      } else {
+	        $el.animate({'right': right})
+	        $el.data("show", true);
+	      }
+	    });
+	  }());
 	</script>
 	<script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
