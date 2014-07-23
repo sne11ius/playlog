@@ -48,8 +48,8 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
               .replace(" ", "_")
               .replace("%20", "_")
               .split("_").toList
-          Logger.debug("Query: " + query)
-          Logger.debug("Strings: " + strings.mkString(", "))
+          //Logger.debug("Query: " + query)
+          //Logger.debug("Strings: " + strings.mkString(", "))
           (slickPosts.sortBy(p => p.created.desc).filter(_.published === true) list).filter(p => {
         	  strings.forall(s => p.title.toLowerCase contains s)
           }).map(p => {
