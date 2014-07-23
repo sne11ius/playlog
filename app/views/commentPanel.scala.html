@@ -22,16 +22,18 @@
     }
     case None => {
       <div class="sign-in-hint">Sign in to post a comment:
-        @defining(env.providers.values.filter(_.isInstanceOf[SocialProvider[_]])) { providers =>
-          @if(!providers.isEmpty) {
-            @for(p <- providers) {
-              <!--a href="@routes.SocialAuthController.authenticate(p.id)"><img src="@routes.Assets.at(s"images/providers/${p.id}.png")" style="width:16px;height:16px;"></a-->
-              <a class="btn btn-social-icon btn-sm btn-@(p.id + (if (p.id.contains("google")) "-plus" else ""))" href="@routes.SocialAuthController.authenticate(p.id)">
-						    <i class="fa fa-@(p.id + (if (p.id.contains("google")) "-plus" else ""))"></i>
-						  </a>
-            }
-          }
-        }
+        <span class="sign-in-buttons">
+	        @defining(env.providers.values.filter(_.isInstanceOf[SocialProvider[_]])) { providers =>
+	          @if(!providers.isEmpty) {
+	            @for(p <- providers) {
+	              <!--a href="@routes.SocialAuthController.authenticate(p.id)"><img src="@routes.Assets.at(s"images/providers/${p.id}.png")" style="width:16px;height:16px;"></a-->
+	              <a class="btn btn-social-icon btn-sm btn-@(p.id + (if (p.id.contains("google")) "-plus" else ""))" href="@routes.SocialAuthController.authenticate(p.id)">
+							    <i class="fa fa-@(p.id + (if (p.id.contains("google")) "-plus" else ""))"></i>
+							  </a>
+	            }
+	          }
+	        }
+        </span>
       </div>
     }
   }
