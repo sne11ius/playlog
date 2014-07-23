@@ -9,12 +9,11 @@
       <fieldset>
         <legend class="">Add a comment</legend>
         @helper.form(action = routes.CommentController.addComment()) {
-          @text(commentForm("title"), "Titel")
-          @text(commentForm("body"), "Body")
+          @textArea(commentForm("body"), "Write something...")
           <input type="hidden" name="postId" value="@post.id">
           <div class="form-group">
             <div class="">
-              <button id="submit" type="submit" value="submit" class="btn btn-primary btn-block">Absenden</button>
+              <button id="submit" type="submit" value="submit" class="btn btn-default btn-block">Submit</button>
             </div>
           </div>
         }
@@ -40,13 +39,12 @@
   @if(post.comments.isEmpty) {
     <h3>No comments yet</h3>
   } else {
-    <h3>@post.comments.length Comment@("s".when(post.comments.length > 1)):</h3>
+    <h3>@post.comments.length Comment@("s".when(post.comments.length > 1)) so far:</h3>
     @for(comment <- post.comments) {
       <div class="single-comment">
 	      <span class="pull-right">
 	        Created: @formatJoda(comment.created) | Author: @comment.author.fullName | <img style="width:20px" src="@comment.author.avatarURL">
 	      </span>
-	      <h4>@comment.title</h4>
 	      <div>@comment.body</div>
       </div>
     }
