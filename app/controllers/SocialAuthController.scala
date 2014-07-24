@@ -57,7 +57,17 @@ class SocialAuthController @Inject() (
                 }
               }
               env.eventBus.publish(LoginEvent(user, request, request2lang))
-              env.authenticatorService.send(authenticator, Redirect(routes.Application.index(None, None, None)))
+              val redirectUrl = request.session.get("redirectUrl").map { redirectUrl =>
+                redirectUrl
+              }.getOrElse {
+                "[Nothing]"
+              }
+              Logger.debug(s"Session redirect: $redirectUrl")
+              if ("[Nothing]" != redirectUrl) {
+                env.authenticatorService.send(authenticator, Redirect(redirectUrl))
+              } else {
+                env.authenticatorService.send(authenticator, Redirect(routes.Application.index(None, None, None)))
+              }
             case None => throw new AuthenticationException("Couldn't create an authenticator")
           }
         }

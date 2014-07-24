@@ -50,6 +50,15 @@ class AuthenticationController @Inject() (implicit val env: Environment[User, Ca
    */
   def signOut = SecuredAction.async { implicit request =>
     env.eventBus.publish(LogoutEvent(request.identity, request, request2lang))
-    Future.successful(env.authenticatorService.discard(Redirect(routes.Application.index(None, None, None))))
+    val redirectUrl = request.session.get("redirectUrl").map { redirectUrl =>
+      redirectUrl
+    }.getOrElse {
+      "[Nothing]"
+    }
+    if ("[Nothing]" != redirectUrl) {
+      Future.successful(env.authenticatorService.discard(Redirect(redirectUrl)))
+    } else {
+      Future.successful(env.authenticatorService.discard(Redirect(routes.Application.index(None, None, None))))
+    }
   }
 }
