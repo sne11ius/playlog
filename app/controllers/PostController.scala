@@ -25,6 +25,7 @@ import models.daos.UserDAO
 import scala.concurrent.ExecutionContext.Implicits.global
 import service.PostService
 import java.util.UUID
+import com.mohiva.play.silhouette.core.exceptions.AccessDeniedException
 
 class PostController @Inject() (userDAO: UserDAO, postService: PostService, implicit val env: Environment[User, CachedCookieAuthenticator])
   extends Controller with Silhouette[User, CachedCookieAuthenticator] {
@@ -33,81 +34,114 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
     mapping(
       "title" -> nonEmptyText,
       "body" -> nonEmptyText,
-      "published" -> boolean) {
+      "published" -> default(boolean, true)) {
         (title, body, published) => Post(UUID.randomUUID(), title, body, new DateTime, new DateTime, published, UserStub, List())
       } {
         post => Some(post.title, post.body, post.published)
-      })
-
-  def form = Action {
-    Ok(html.composepost.form(createPostForm));
-  }
-
-  def editForm = Action {
-    val existingPost = Post(
-      UUID.randomUUID(), "faketitle", "fakebody", new DateTime, new DateTime, false, UserStub, List()
+      }
     )
-    Ok(html.composepost.form(createPostForm.fill(existingPost)))
-  }
 
-  def showImport = Action {
-    Ok(html.importposts.importPosts())
-  }
-
-  def importPosts = UserAwareAction.async { implicit request =>
-    implicit val postReads: Reads[Post] = (
-      Reads.pure(UUID.randomUUID()) and
-      (__ \ "title").read[String] and
-      (__ \ "body").read[String] and
-      (__ \ "date").read[DateTime] and
-      (__ \ "date").read[DateTime] and
-      Reads.pure(true) and
-      Reads.pure(request.identity.get) and
-      Reads.pure(List()))(Post)
-    val postsToAdd = Json.parse(Form("jsonPosts" -> text).bindFromRequest.get).as[List[Post]]
-
-    Logger.debug("Importing...")
-    DB withSession { implicit session =>
-      postsToAdd.map(post => {
-        println(post)
-        postService.insert(post)
-      })
+  def form = SecuredAction { implicit request =>
+    DB.withSession { implicit session =>
+      if (request.identity.isAdmin) {
+        Ok(html.composepost.form(createPostForm));
+      } else {
+        throw new AccessDeniedException("You are not an admin!!!!")
+      }
     }
-    Logger.debug("...done")
-    Future.successful(Redirect(routes.Application.index(None, None, None)))
   }
 
-  def editPost = UserAwareAction.async { implicit request =>
-    DB withSession { implicit session =>
-      val postId = UUID.fromString(Form("postId" -> text).bindFromRequest.get)
-      val post = postService.find(postId)
-      Future.successful(Ok(html.composepost.form(createPostForm.fill(post))))
+  def editForm = SecuredAction { implicit request =>
+    DB.withSession { implicit session =>
+      if (request.identity.isAdmin) {
+	    val existingPost = Post(
+	      UUID.randomUUID(), "faketitle", "fakebody", new DateTime, new DateTime, false, UserStub, List()
+	    )
+	    Ok(html.composepost.form(createPostForm.fill(existingPost)))
+      } else {
+        throw new AccessDeniedException("You are not an admin!!!!")
+      }
+    }
+  }
+
+  def showImport = SecuredAction { implicit request =>
+    DB.withSession { implicit session =>
+      if (request.identity.isAdmin) {
+    	Ok(html.importposts.importPosts())
+      } else {
+        throw new AccessDeniedException("You are not an admin!!!!")
+      }
+    }
+  }
+
+  def importPosts = SecuredAction.async { implicit request =>
+    DB.withSession { implicit session =>
+      if (request.identity.isAdmin) {
+	    implicit val postReads: Reads[Post] = (
+	      Reads.pure(UUID.randomUUID()) and
+	      (__ \ "title").read[String] and
+	      (__ \ "body").read[String] and
+	      (__ \ "date").read[DateTime] and
+	      (__ \ "date").read[DateTime] and
+	      Reads.pure(true) and
+	      Reads.pure(request.identity) and
+	      Reads.pure(List())
+	    )(Post)
+	    val postsToAdd = Json.parse(Form("jsonPosts" -> text).bindFromRequest.get).as[List[Post]]
+	
+	    Logger.debug("Importing...")
+        postsToAdd.map(post => {
+          println(post)
+          postService.insert(post)
+        })
+	    Logger.debug("...done")
+	    Future.successful(Redirect(routes.Application.index(None, None, None)))
+      } else {
+        throw new AccessDeniedException("You are not an admin!!!!")
+      }
+    }
+  }
+
+  def editPost = SecuredAction.async { implicit request =>
+    if (request.identity.isAdmin) {
+	  DB.withSession { implicit session =>
+	    val postId = UUID.fromString(Form("postId" -> text).bindFromRequest.get)
+	    val post = postService.find(postId)
+	    Future.successful(Ok(html.composepost.form(createPostForm.fill(post))))
+	  }
+    } else {
+      throw new AccessDeniedException("You are not an admin!!!!")
     }
   }
 
   def submit = SecuredAction.async { implicit request =>
-    createPostForm.bindFromRequest.fold(
-      formWithErrors => {
-        Future.successful(BadRequest(views.html.composepost.form(formWithErrors)))
-      },
-      _ => {
-        DB withSession { implicit session =>
-          val p = createPostForm.bindFromRequest.get
-          Logger.debug("Did bind post from form")
-          userDAO.find(request.identity.userID) andThen {
-            case user => {
-              Logger.debug("Found user")
-              if (user.get.get.isAdmin) {
-                Logger.debug("User is admin")
-                val post = Post(UUID.randomUUID(), p.title, p.body, p.created, p.edited, p.published, user.get.get, List())
-                postService.insert(post)
-                Logger.debug("post added")
-                Future.successful(Redirect(routes.Application.index(None, None, None)))
-              }
-            }
-          }
-          Future.successful(Redirect(routes.Application.index(None, None, None)))
-        }
-      })
+    if (request.identity.isAdmin) {
+	  createPostForm.bindFromRequest.fold(
+	    formWithErrors => {
+	      Future.successful(BadRequest(views.html.composepost.form(formWithErrors)))
+	    },
+	    _ => {
+	      DB withSession { implicit session =>
+	        val p = createPostForm.bindFromRequest.get
+	        Logger.debug("Did bind post from form")
+	        userDAO.find(request.identity.userID) andThen {
+	          case user => {
+	            Logger.debug("Found user")
+	            if (user.get.get.isAdmin) {
+	              Logger.debug("User is admin")
+	              val post = Post(UUID.randomUUID(), p.title, p.body, p.created, p.edited, p.published, user.get.get, List())
+	              postService.insert(post)
+	              Logger.debug("post added")
+	              Future.successful(Redirect(routes.Application.index(None, None, None)))
+	            }
+	          }
+	        }
+	        Future.successful(Redirect(routes.Application.index(None, None, None)))
+	      }
+	    }
+	  )
+    } else {
+      throw new AccessDeniedException("You are not an admin!!!!")
+    }
   }
 }

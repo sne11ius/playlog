@@ -27,8 +27,8 @@
 	          @if(!providers.isEmpty) {
 	            @for(p <- providers) {
 	              <a class="btn btn-social-icon btn-sm btn-@(p.id + (if (p.id.contains("google")) "-plus" else ""))" href="@routes.SocialAuthController.authenticate(p.id)">
-                    <i class="fa fa-@(p.id + (if (p.id.contains("google")) "-plus" else ""))"></i>
-                  </a>
+                  <i class="fa fa-@(p.id + (if (p.id.contains("google")) "-plus" else ""))"></i>
+                </a>
 	            }
 	          }
 	        }
