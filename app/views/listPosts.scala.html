@@ -1,0 +1,30 @@
+@(posts: List[Post], admin: User)
+
+@main("wasis.nu/mit/blog#about", "", Some(admin)) {
+  <style>
+    .row {
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+  </style>
+  <div class="row" style="margin-top: 20px;">
+    <table class="easylist">
+      <tr>
+        <th>Title</th>
+        <th>Body</th>
+        <th>Created</th>
+        <th>Edited</th>
+        <th></th>
+      </tr>
+        @for(post <- posts) {
+          <tr>
+            <td style="min-width: 160px;">@Html(post.title)</td>
+            <td>@Html(post.body.substring(0, Math.min(post.body.length, 500)))</td>
+            <td style="min-width: 149px;">@formatJoda(post.created)</td>
+            <td style="min-width: 149px;">@formatJoda(post.edited)</td>
+            <td><a href="@routes.EditPostController.editExistingPost(post.id)" class="btn btn-default btn-xs">Edit</a></td>
+          </tr>
+        }
+    </table>
+  </div>
+}

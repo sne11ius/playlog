@@ -33,7 +33,8 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
     mapping(
       "title" -> nonEmptyText,
       "body" -> nonEmptyText,
-      "published" -> default(boolean, true)) {
+      "published" -> boolean
+    ) {
         (title, body, published) => Post(UUID.randomUUID(), title, body, new DateTime, new DateTime, published, UserStub, List())
       } {
         post => Some(post.title, post.body, post.published)

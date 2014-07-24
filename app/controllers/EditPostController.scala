@@ -39,17 +39,24 @@ class EditPostController @Inject() (userService: UserService, postService: PostS
     }
   )
   
+  def listUnpublishedPosts() = SecuredAction.async { implicit request =>
+    DB.withSession { implicit session =>
+      if (request.identity.isAdmin) {
+        Future.successful(Ok(html.listPosts(postService.findAllUnpublished, request.identity)))
+      } else {
+        throw new AccessDeniedException("You are not an admin!!!!")
+      }
+    }
+  }
+  
   def editExistingPost(postId: UUID) = SecuredAction.async { implicit request =>
     DB.withSession { implicit session =>
-      AdminIdentifiers.findByUserId(request.identity.userID) match {
-        case Some(user) => {
-          Logger.debug("Editing post by id: " + postId)
-          val post = postService.find(postId);
-          Future.successful(Ok(html.editPost(editPostForm.fill(post), post)))
-        }
-        case None => {
-          throw new AccessDeniedException("You are not an admin!!!!")
-        }
+      if (request.identity.isAdmin) {
+        Logger.debug("Editing post by id: " + postId)
+        val post = postService.find(postId);
+        Future.successful(Ok(html.editPost(editPostForm.fill(post), post)))
+      } else {
+        throw new AccessDeniedException("You are not an admin!!!!")
       }
     }
   }

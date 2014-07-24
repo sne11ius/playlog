@@ -20,6 +20,7 @@ POST    /importPosts                 @controllers.PostController.importPosts
 GET     /importPosts                 @controllers.PostController.showImport
 POST    /removePost                  @controllers.Application.removePost
 GET     /removeAllPosts              @controllers.Application.removeAll
+GET     /unpublished                 @controllers.EditPostController.listUnpublishedPosts
 POST    /editPost                    @controllers.PostController.editPost
 
 # Comments

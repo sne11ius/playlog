@@ -19,6 +19,8 @@ trait PostService {
   
   def countAllPublished: Int
   
+  def findAllUnpublished: List[Post]
+  
   def findSinglePost(date: DateTime, title: String): List[Post]
   
   def find(postId: UUID): Post

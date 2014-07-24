@@ -32,16 +32,19 @@
 					@user.map { u =>
             @if(u.isAdmin) {
               <li class="@("active".when(nav == "compose"))">
-                <a href="@routes.PostController.form">Beitrag erstellen</a>
+                <a href="@routes.PostController.form">Compose</a>
               </li>
               <li class="@("active".when(nav == "import"))">
-                  <a href="@routes.PostController.importPosts">Beiträge importieren</a>
+                  <a href="@routes.PostController.importPosts">Import</a>
               </li>
               <li style="background-color: red;">
-                  <a href="@routes.Application.removeAll">Alle Beiträge löschen</a>
+                  <a href="@routes.Application.removeAll">Delete all</a>
+              </li>
+              <li>
+                  <a href="@routes.EditPostController.listUnpublishedPosts">Unpublished</a>
               </li>
               <li style="">
-                  <a href="@routes.AdminController.index">Benutzer anzeigen</a>
+                  <a href="@routes.AdminController.index">Users</a>
               </li>
             }
             <!-- li><a href="#">@u.fullName</a></li-->

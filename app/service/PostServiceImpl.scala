@@ -75,9 +75,18 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
     }
   }
   
-  def countAllPublished: Int = {
+  override def countAllPublished: Int = {
     DB withSession { implicit session =>
-      slickPosts.sortBy(p => p.created.desc).filter(_.published === true).length.run
+      slickPosts.filter(_.published === true).length.run
+    }
+  }
+  
+  override def findAllUnpublished: List[Post] = {
+    DB withSession { implicit session =>
+      val allUsers = userDAO.findAll
+      slickPosts.filter(_.published === false).list.map(p => {
+        Post(p.id, p.title, p.body, new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), List())
+      })
     }
   }
 
