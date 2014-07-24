@@ -5,6 +5,7 @@ Simple blogware with Play Framework
 ## Features
   - Powered by [Play Framwork](http://www.playframework.com/)
   - Social sign in via github, google, twitter and facebook (powered by [silhouette](http://silhouette.mohiva.com/))
+  - Atom feed
   - Awesome social share buttons
   - That's pretty much it ;)
 
