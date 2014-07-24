@@ -48,8 +48,8 @@ class SocialAuthController @Inject() (
         } yield {
           maybeAuthenticator match {
             case Some(authenticator) =>
-              Logger.debug("User logged in: " + user.fullName)
-              Logger.debug("With UUID: " + user.userID)
+              Logger.debug(s"User logged in: ${user.fullName}, ${user.email} (via ${user.loginInfo.providerID})")
+              //Logger.debug("With UUID: " + user.userID)
               DB.withSession { implicit session =>
                 if (AdminIdentifiers.findAll.isEmpty) {
                   Logger.debug("We've got a new admin: " + user.fullName)
@@ -62,7 +62,7 @@ class SocialAuthController @Inject() (
               }.getOrElse {
                 "[Nothing]"
               }
-              Logger.debug(s"Session redirect: $redirectUrl")
+              //Logger.debug(s"Session redirect: $redirectUrl")
               if ("[Nothing]" != redirectUrl) {
                 env.authenticatorService.send(authenticator, Redirect(redirectUrl))
               } else {

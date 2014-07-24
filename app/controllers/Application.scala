@@ -31,7 +31,7 @@ class Application @Inject() (userService: UserService, postService: PostService,
   def index(inTitle: Option[String], start: Option[Int], numItems: Option[Int]) = UserAwareAction.async { implicit request =>
     DB.withSession { implicit session =>
       val redirectUrl = buildRedirectUrl(inTitle, start, numItems)
-      Logger.debug(s"redirect: $redirectUrl");
+      //Logger.debug(s"redirect: $redirectUrl");
       if (AdminIdentifiers.findAll.isEmpty) {
         Future.successful(Ok(views.html.plain()))
       } else if (start.isDefined && numItems.isDefined) {
@@ -84,7 +84,7 @@ class Application @Inject() (userService: UserService, postService: PostService,
   def singlePost(dateString: String, title: String) = UserAwareAction.async { implicit request =>
     DB.withSession { implicit session =>
       val redirectUrl = buildRedirectUrl(dateString, title)
-      Logger.debug(s"redirect: $redirectUrl");
+      //Logger.debug(s"redirect: $redirectUrl");
       val date = DateTimeFormat.forPattern("yyyy-MM-dd").parseDateTime(dateString).withZone(DateTimeZone.UTC).withHourOfDay(0)
       val searchTitle = java.net.URLDecoder.decode(title, "UTF-8")
       //Logger.debug("searchTitle: " + searchTitle)

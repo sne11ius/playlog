@@ -99,7 +99,7 @@ class UserDAOSlick extends UserDAO {
         // Insert if it does not exist yet
         slickLoginInfos.filter(info => info.providerID === dbLoginInfo.providerID && info.providerKey === dbLoginInfo.providerKey).firstOption match {
           case None => slickLoginInfos.insert(dbLoginInfo)
-          case Some(info) => Logger.debug("Nothing to insert since info already exists: " + info)
+          case Some(info) => ()//Logger.debug("Nothing to insert since info already exists: " + info)
         }
         dbLoginInfo = slickLoginInfos.filter(info => info.providerID === dbLoginInfo.providerID && info.providerKey === dbLoginInfo.providerKey).first
         // Now make sure they are connected
