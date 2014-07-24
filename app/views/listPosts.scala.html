@@ -19,7 +19,7 @@
         @for(post <- posts) {
           <tr>
             <td style="min-width: 160px;">@Html(post.title)</td>
-            <td>@Html(post.body.substring(0, Math.min(post.body.length, 500)))</td>
+            <td>@Html(post.body)</td>
             <td style="min-width: 149px;">@formatJoda(post.created)</td>
             <td style="min-width: 149px;">@formatJoda(post.edited)</td>
             <td><a href="@routes.EditPostController.editExistingPost(post.id)" class="btn btn-default btn-xs">Edit</a></td>
