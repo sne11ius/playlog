@@ -2,7 +2,6 @@ package controllers
 
 import views._
 import models.Post
-import java.sql.Date
 import models._
 import play.api._
 import play.api.db.slick._
