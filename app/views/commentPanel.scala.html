@@ -3,6 +3,7 @@
 @import bootstrap._
 @import com.mohiva.play.silhouette.core.providers._
 
+<span id="comments"></span>
 <div class="comments" id="comments@post.id">
   @user match {
     case Some(user) => {
@@ -25,10 +26,9 @@
 	        @defining(env.providers.values.filter(_.isInstanceOf[SocialProvider[_]])) { providers =>
 	          @if(!providers.isEmpty) {
 	            @for(p <- providers) {
-	              <!--a href="@routes.SocialAuthController.authenticate(p.id)"><img src="@routes.Assets.at(s"images/providers/${p.id}.png")" style="width:16px;height:16px;"></a-->
 	              <a class="btn btn-social-icon btn-sm btn-@(p.id + (if (p.id.contains("google")) "-plus" else ""))" href="@routes.SocialAuthController.authenticate(p.id)">
-							    <i class="fa fa-@(p.id + (if (p.id.contains("google")) "-plus" else ""))"></i>
-							  </a>
+                    <i class="fa fa-@(p.id + (if (p.id.contains("google")) "-plus" else ""))"></i>
+                  </a>
 	            }
 	          }
 	        }

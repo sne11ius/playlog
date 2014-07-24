@@ -35,6 +35,12 @@ class SocialAuthController @Inject() (
    * @return The result to display.
    */
   def authenticate(provider: String) = Action.async { implicit request =>
+    val redirectUrl = request.session.get("redirectUrl").map { redirectUrl =>
+	  redirectUrl
+	}.getOrElse {
+	  "[Nothing]"
+	}
+    Logger.debug(s"Session redirect: $redirectUrl")
     (env.providers.get(provider) match {
       case Some(p: SocialProvider[_] with CommonSocialProfileBuilder[_]) => p.authenticate()
       case _ => Future.failed(new AuthenticationException(s"Cannot authenticate with unexpected social provider $provider"))
@@ -57,7 +63,11 @@ class SocialAuthController @Inject() (
                 }
               }
               env.eventBus.publish(LoginEvent(user, request, request2lang))
-              env.authenticatorService.send(authenticator, Redirect(routes.Application.index(None, None, None)))
+              if ("[Nothing]" != redirectUrl) {
+                env.authenticatorService.send(authenticator, Redirect(redirectUrl))
+              } else {
+                env.authenticatorService.send(authenticator, Redirect(routes.Application.index(None, None, None)))
+              }
             case None => throw new AuthenticationException("Couldn't create an authenticator")
           }
         }
