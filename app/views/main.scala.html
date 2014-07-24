@@ -95,9 +95,8 @@
 		  window.setTimeout(function() {
 			  $el.animate({'right': right}, 1000);
 		  }, 7000);
-	    jQuery('#about-you label').on('click', function() {
-	      var $el = jQuery('#about-you');
-	      if ($el.data("show")) {
+      $el.on('click', function() {
+        if ($el.data("show")) {
 	        $el.animate({'right': '-1px'})
 	        $el.data("show", false);
 	      } else {
