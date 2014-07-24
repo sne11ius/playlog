@@ -19,7 +19,7 @@
 	      <td>@user.firstName</td>
 	      <td>@user.lastName</td>
 	      <td>@user.email</td>
-	      <td><img src="@user.avatarURL"></td>
+	      <td><img src="@user.avatarURL" style="max-height: 150px;></td>
 	      <td>
 	        <input type="checkbox" @("checked".when(user.isAdmin)) disabled>
 	      </td>
