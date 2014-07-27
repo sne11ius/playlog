@@ -1,30 +1,29 @@
-@(editPostForm: Form[Post], post: Post, user: User)
+@(createPostForm: Form[Post], post: Post, user: User)
 
 @import helper._
-@import helper.twitterBootstrap._
+@import bootstrap._
 
 @main("Beitrag bearbeiten", nav = "edit", Some(user)) {
-  @helper.form(action = routes.EditPostController.updateExistingPost(post.id)) {
-    @inputText(
-      editPostForm("title"),
-      '_label -> "",
-      '_help -> ""
-    )
-    @textarea(
-      editPostForm("body"),
-      '_label -> "",
-      '_help -> "",
-      'placeholder -> "body - don't forget you can use html here, too"
-    )
-    @checkbox(
-      editPostForm("published"),
-      '_label -> "",
-      '_help -> "",
-      '_text -> "Release!"
-    )
-    <div class="actions">
-      <a href="@routes.Application.index(None, None, None)" class="btn danger">Abbrechen</a>
-      <input type="submit" class="btn primary" value="Speichern">
-    </div>
-  }
+  <div class="compose">
+	  <fieldset>
+	    <legend class="">Edit post</legend>
+	    @helper.form(action = routes.EditPostController.updateExistingPost(post.id)) {
+	      @text(createPostForm("title"), "title - don't forget you can use html here")
+	      @textArea(createPostForm("body"), "body - don't forget you can use html here, too", "", 25)
+	      @checkbox(
+	        createPostForm("published"),
+	        '_label -> "",
+	        '_help -> "",
+	        '_text -> "Release!",
+	        '_value -> "true"
+	      )
+	      <div class="form-group buttons">
+	        <div class="">
+	          <a href="@routes.Application.index(None, None, None)" class="btn btn-danger">Cancel</a>
+	          <input type="submit" class="btn btn-primary" value="Submit">
+	        </div>
+	      </div>
+	    }
+	  </fieldset>
+  </div>
 }
