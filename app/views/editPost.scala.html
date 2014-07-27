@@ -1,9 +1,9 @@
-@(editPostForm: Form[Post], post: Post)
+@(editPostForm: Form[Post], post: Post, user: User)
 
 @import helper._
 @import helper.twitterBootstrap._
 
-@main("Beitrag bearbeiten", nav = "edit") {
+@main("Beitrag bearbeiten", nav = "edit", Some(user)) {
   @helper.form(action = routes.EditPostController.updateExistingPost(post.id)) {
     @inputText(
       editPostForm("title"),

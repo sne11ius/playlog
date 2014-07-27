@@ -13,11 +13,11 @@
 	    <div class="form-group">
 	      @helper.form(action = routes.Application.removePost) {
 	        <input type="hidden" name="postId" value="@post.id">
-	        <button id="submit" type="submit" value="submit" class="btn btn-danger">Eintrag löschen</button>
+	        <button id="submit" type="submit" value="submit" class="btn btn-danger btn-xs">Eintrag löschen</button>
 	      }
 	      @helper.form(action = routes.EditPostController.editExistingPost(post.id)) {
 	        <input type="hidden" name="postId" value="@post.id">
-	        <button id="submit" type="submit" value="submit" class="btn btn-primary">Eintrag bearbeiten</button>
+	        <button id="submit" type="submit" value="submit" class="btn btn-primary btn-xs">Eintrag bearbeiten</button>
 	      }
 	    </div>
 	  }

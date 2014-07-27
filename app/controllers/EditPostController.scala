@@ -54,7 +54,7 @@ class EditPostController @Inject() (userService: UserService, postService: PostS
       if (request.identity.isAdmin) {
         Logger.debug("Editing post by id: " + postId)
         val post = postService.find(postId);
-        Future.successful(Ok(html.editPost(editPostForm.fill(post), post)))
+        Future.successful(Ok(html.editPost(editPostForm.fill(post), post, request.identity)))
       } else {
         throw new AccessDeniedException("You are not an admin!!!!")
       }
@@ -85,11 +85,11 @@ class EditPostController @Inject() (userService: UserService, postService: PostS
     	    existingPost.comments
     	  )
     	  postService.update(mergedPost)
-          Ok(html.editPost(editPostForm.fill(mergedPost), mergedPost))
+          Ok(html.editPost(editPostForm.fill(mergedPost), mergedPost, request.identity))
         }
       )
       val existingPost = postService.find(postId)
-      Future.successful(Ok(html.editPost(editPostForm.fill(existingPost), existingPost)))
+      Future.successful(Ok(html.editPost(editPostForm.fill(existingPost), existingPost, request.identity)))
     }
   }
 }
