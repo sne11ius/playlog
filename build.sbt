@@ -6,6 +6,8 @@ version := "1.0-SNAPSHOT"
 
 scalaVersion := "2.11.1"
 
+resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
+
 libraryDependencies ++= Seq(
   "com.mohiva" %% "play-silhouette" % "1.0",
   "org.webjars" %% "webjars-play" % "2.3.0",
@@ -16,7 +18,8 @@ libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "2.3",
   "org.joda" % "joda-convert" % "1.5",
   "mysql" % "mysql-connector-java" % "5.1.18",
-  "com.mohiva" %% "play-html-compressor" % "0.3.1",
+  /*"com.mohiva" %% "play-html-compressor" % "0.3.1",*/
+  "com.mohiva" %% "play-html-compressor" % "0.4-SNAPSHOT",
   cache,
   filters
 )
