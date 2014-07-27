@@ -44,7 +44,7 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
   def form = SecuredAction { implicit request =>
     DB.withSession { implicit session =>
       if (request.identity.isAdmin) {
-        Ok(html.composepost.form(createPostForm));
+        Ok(html.composepost.form(createPostForm, request.identity));
       } else {
         throw new AccessDeniedException("You are not an admin!!!!")
       }
@@ -57,7 +57,7 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
 	    val existingPost = Post(
 	      UUID.randomUUID(), "faketitle", "fakebody", new DateTime, new DateTime, false, UserStub, List()
 	    )
-	    Ok(html.composepost.form(createPostForm.fill(existingPost)))
+	    Ok(html.composepost.form(createPostForm.fill(existingPost), request.identity))
       } else {
         throw new AccessDeniedException("You are not an admin!!!!")
       }
@@ -107,7 +107,7 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
 	  DB.withSession { implicit session =>
 	    val postId = UUID.fromString(Form("postId" -> text).bindFromRequest.get)
 	    val post = postService.find(postId)
-	    Future.successful(Ok(html.composepost.form(createPostForm.fill(post))))
+	    Future.successful(Ok(html.composepost.form(createPostForm.fill(post), request.identity)))
 	  }
     } else {
       throw new AccessDeniedException("You are not an admin!!!!")
@@ -118,7 +118,7 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
     if (request.identity.isAdmin) {
 	  createPostForm.bindFromRequest.fold(
 	    formWithErrors => {
-	      Future.successful(BadRequest(views.html.composepost.form(formWithErrors)))
+	      Future.successful(BadRequest(views.html.composepost.form(formWithErrors, request.identity)))
 	    },
 	    _ => {
 	      DB withSession { implicit session =>
