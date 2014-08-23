@@ -17,7 +17,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-slick" % "0.8.0",
   "joda-time" % "joda-time" % "2.3",
   "org.joda" % "joda-convert" % "1.5",
-  "mysql" % "mysql-connector-java" % "5.1.18",
+  "mysql" % "mysql-connector-java" % "5.1.32",
   /*"com.mohiva" %% "play-html-compressor" % "0.3.1",*/
   "com.mohiva" %% "play-html-compressor" % "0.4-SNAPSHOT",
   cache,
