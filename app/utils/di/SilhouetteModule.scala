@@ -29,6 +29,8 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     bind[UserService].to[UserServiceImpl]
     bind[PostService].to[PostServiceImpl]
     bind[UserDAO].to[UserDAOSlick]
+    bind[YoSubscriberDAO].to[YoSubscriberDAOSlick]
+    bind[YoService].to[YoServiceImpl]
     bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoDAOSlick]
     bind[DelegableAuthInfoDAO[OAuth1Info]].to[OAuth1InfoDAOSlick]
     bind[DelegableAuthInfoDAO[OAuth2Info]].to[OAuth2InfoDAOSlick]

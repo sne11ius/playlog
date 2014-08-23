@@ -25,8 +25,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import service.PostService
 import java.util.UUID
 import com.mohiva.play.silhouette.core.exceptions.AccessDeniedException
+import service.YoService
 
-class PostController @Inject() (userDAO: UserDAO, postService: PostService, implicit val env: Environment[User, CachedCookieAuthenticator])
+class PostController @Inject() (userDAO: UserDAO, postService: PostService, yoService: YoService, implicit val env: Environment[User, CachedCookieAuthenticator])
   extends Controller with Silhouette[User, CachedCookieAuthenticator] {
 
   val createPostForm: Form[Post] = Form(
@@ -132,6 +133,12 @@ class PostController @Inject() (userDAO: UserDAO, postService: PostService, impl
 	              val post = Post(UUID.randomUUID(), p.title, p.body, p.created, p.edited, p.published, user.get.get, List())
 	              postService.insert(post)
 	              Logger.debug("post added")
+	              if (post.published) {
+	                val titlePart = java.net.URLEncoder.encode(post.title.replaceAll("\\<.*?\\>", "").replaceAll("\\&.*?\\;", "").replaceAll(" ", "-"), "UTF-8")
+	                val datePart = post.created.toString("yyyy-MM-dd")
+	                val permalink = FeedConfig.baseUrl + "/" + datePart + "/" + titlePart;
+	                yoService.sendYoToSubscribers(permalink)
+	              }
 	              Future.successful(Redirect(routes.Application.index(None, None, None)))
 	            }
 	          }

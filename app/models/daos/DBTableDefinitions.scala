@@ -136,6 +136,17 @@ object DBTableDefinitions {
     def postId = column[UUID]("postId", O.NotNull)
     def * = (id.?, body, created, edited, authorId, postId) <> (DBComment.tupled, DBComment.unapply)
   }
+  
+  case class DBYoSubscriber(
+    id: UUID,
+    username: String
+  )
+  
+  class YoSubscribers(tag: Tag) extends Table[DBYoSubscriber](tag, "yosubscriber") {
+    def id = column[UUID]("id", O.PrimaryKey)
+    def username = column[String]("username", O.NotNull)
+    def * = (id, username) <> (DBYoSubscriber.tupled, DBYoSubscriber.unapply)
+  }
 
   val slickUsers = TableQuery[Users]
   val slickLoginInfos = TableQuery[LoginInfos]
@@ -145,5 +156,6 @@ object DBTableDefinitions {
   val slickOAuth2Infos = TableQuery[OAuth2Infos]
   val slickPosts = TableQuery[Posts]
   val slickComments = TableQuery[Comments]
+  val slickYoSubscribers = TableQuery[YoSubscribers]
 
 }

@@ -40,3 +40,6 @@ POST    /signUp                      @controllers.SignUpController.signUp
 
 # Atom feed
 GET     /feed                        @controllers.AtomFeedController.createAtomFeed
+
+# Yo
+GET     /api/yo/newuser              @controllers.YoApiEndpointController.addUser(username: String)

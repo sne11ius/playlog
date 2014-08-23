@@ -21,7 +21,7 @@ import scala.concurrent.Future
 import com.mohiva.play.silhouette.core.exceptions.AccessDeniedException
 import java.util.UUID
 
-class EditPostController @Inject() (userService: UserService, postService: PostService, implicit val env: Environment[User, CachedCookieAuthenticator])
+class EditPostController @Inject() (userService: UserService, postService: PostService, yoService: YoService, implicit val env: Environment[User, CachedCookieAuthenticator])
     extends Controller with Silhouette[User, CachedCookieAuthenticator] {
   
   val editPostForm: Form[Post] = Form(
@@ -85,6 +85,12 @@ class EditPostController @Inject() (userService: UserService, postService: PostS
     	    existingPost.comments
     	  )
     	  postService.update(mergedPost)
+    	  if (mergedPost.published) {
+            val titlePart = java.net.URLEncoder.encode(mergedPost.title.replaceAll("\\<.*?\\>", "").replaceAll("\\&.*?\\;", "").replaceAll(" ", "-"), "UTF-8")
+            val datePart = mergedPost.created.toString("yyyy-MM-dd")
+            val permalink = FeedConfig.baseUrl + "/" + datePart + "/" + titlePart;
+            yoService.sendYoToSubscribers(permalink)
+          }
           Ok(html.editPost(editPostForm.fill(mergedPost), mergedPost, request.identity))
         }
       )
