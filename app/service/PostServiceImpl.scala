@@ -24,7 +24,7 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
         val comments = slickComments.sortBy(c => c.created.desc).filter(_.postId === p.id).list.map(c =>
           Comment(c.id, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
         )
-        Post(p.id, p.title, p.body, new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
+        Post(p.id, p.title, p.body.replaceAll("\"http//:", "\"https//:"), new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
       })
     }
   }
@@ -38,7 +38,7 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
 	        val comments = slickComments.sortBy(c => c.created.desc).filter(_.postId === p.id).list.map(c =>
 	          Comment(c.id, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
 	        )
-	        Post(p.id, p.title, p.body, new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
+	        Post(p.id, p.title, p.body.replaceAll("\"http//:", "\"https//:"), new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
 	      })
         case Some(query) => {
           val strings = query
@@ -56,7 +56,7 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
 	        val comments = slickComments.sortBy(c => c.created.desc).filter(_.postId === p.id).list.map(c =>
 	          Comment(c.id, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
 	        )
-	        Post(p.id, p.title, p.body, new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
+	        Post(p.id, p.title, p.body.replaceAll("\"http//:", "\"https//:"), new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
 	      })
         }
       }
@@ -70,7 +70,7 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
 		val comments = slickComments.sortBy(c => c.created.desc).filter(_.postId === p.id).list.map(c =>
 		  Comment(c.id, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
 		)
-		Post(p.id, p.title, p.body, new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
+		Post(p.id, p.title, p.body.replaceAll("\"http//:", "\"https//:"), new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
 	  })
     }
   }
@@ -85,7 +85,7 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
     DB withSession { implicit session =>
       val allUsers = userDAO.findAll
       slickPosts.filter(_.published === false).list.map(p => {
-        Post(p.id, p.title, p.body, new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), List())
+        Post(p.id, p.title, p.body.replaceAll("\"http//:", "\"https//:"), new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), List())
       })
     }
   }
@@ -113,7 +113,7 @@ class PostServiceImpl @Inject() (userDAO: UserDAO) extends PostService {
       val comments = slickComments.sortBy(c => c.created.desc).filter(_.postId === postId).list.map(c =>
         Comment(c.id, c.body, new DateTime(c.created), new DateTime(c.edited), allUsers(c.author))
       )
-      Post(p.id, p.title, p.body, new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
+      Post(p.id, p.title, p.body.replaceAll("\"http//:", "\"https//:"), new DateTime(p.created), new DateTime(p.edited), p.published, allUsers(p.author), comments)
     }
   }
   
