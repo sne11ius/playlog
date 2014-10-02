@@ -16,7 +16,7 @@ object FeedConfig extends FeedConfig(
   subtitle = "Blog about technical stuff.",
   authorName = "Cornelius Lilge",
   feedId = "urn:uuid:14369a20-1023-11e4-9191-0800200c9a66",
-  baseUrl = "http://wasis.nu/mit/blog",
+  baseUrl = "https://wasis.nu/mit/blog",
   summaryLength = 200,
   bodyLength = 1000,
   copyright = "(c) 2014 - wasis.nu"
