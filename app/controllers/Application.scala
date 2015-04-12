@@ -6,6 +6,7 @@ import views._
 import play.api.db.slick.DBAction
 import models._
 import service.PostService
+import service.GeoTrackerService
 import play.api.db.slick._
 import play.api.db.slick.Config.driver.simple._
 import play.api.data._
@@ -25,9 +26,9 @@ import org.joda.time.DateTimeZone
 import java.util.UUID
 import java.net.URLEncoder
 
-class Application @Inject() (userService: UserService, postService: PostService, implicit val env: Environment[User, CachedCookieAuthenticator])
+class Application @Inject() (userService: UserService, postService: PostService, geoTrackerService: GeoTrackerService, implicit val env: Environment[User, CachedCookieAuthenticator])
     extends Controller with Silhouette[User, CachedCookieAuthenticator] {
-  
+
   def index(inTitle: Option[String], start: Option[Int], numItems: Option[Int]) = UserAwareAction.async { implicit request =>
     DB.withSession { implicit session =>
       val redirectUrl = buildRedirectUrl(inTitle, start, numItems)
@@ -66,7 +67,7 @@ class Application @Inject() (userService: UserService, postService: PostService,
       }
     }
   }
-  
+
   def buildRedirectUrl(inTitle: Option[String], start: Option[Int], numItems: Option[Int]): String = {
     if (start.isDefined && numItems.isDefined) {
       FeedConfig.baseUrl + s"?start=${start.get}&numItems=${numItems.get}"
@@ -76,11 +77,11 @@ class Application @Inject() (userService: UserService, postService: PostService,
       FeedConfig.baseUrl
     }
   }
-  
+
   def about = Action {
-    Ok(views.html.about())
+    Ok(views.html.about(geoTrackerService.getLatest))
   }
-  
+
   def singlePost(dateString: String, title: String) = UserAwareAction.async { implicit request =>
     DB.withSession { implicit session =>
       val redirectUrl = buildRedirectUrl(dateString, title)
@@ -103,18 +104,18 @@ class Application @Inject() (userService: UserService, postService: PostService,
       }
     }
   }
-  
+
   def buildRedirectUrl(dateString: String, title: String): String = {
     FeedConfig.baseUrl + s"/$dateString/" + URLEncoder.encode(title, "UTF-8") + "#comments"
   }
-  
+
   def removeAll = SecuredAction.async { implicit request =>
     DB.withSession { implicit session =>
       postService.deleteAll
       Future.successful(Redirect(routes.Application.index(None, None, None)))
     }
   }
-  
+
   def removePost = DBAction { implicit rs =>
     {
       val postId = UUID.fromString(Form("postId" -> text).bindFromRequest.get)
@@ -122,7 +123,7 @@ class Application @Inject() (userService: UserService, postService: PostService,
       Redirect(routes.Application.index(None, None, None))
     }
   }
-  
+
     /**
    * Handles the Sign Up action.
    *

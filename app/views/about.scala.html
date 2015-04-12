@@ -1,4 +1,4 @@
-@()
+@(location: Option[GeoCoord])
 
 @main("wasis.nu/mit/blog#about", "", None) {
   <style>
@@ -40,4 +40,37 @@
 		  <iframe src="https://githubbadge.appspot.com/sne11ius?a=0" style="border: 0;height: 142px;width: 200px;overflow: hidden; margin-top: 5px;" frameBorder="0"></iframe>
 	  </div>
   </div>
+  @if(location.isDefined) {
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-2"></div>
+      <div class="col-md-4">
+        <h4>Want to meet?</h4>
+        <div id="map-canvas"></div>
+      </div>
+      <script src="https://maps.googleapis.com/maps/api/js"></script>
+      <style>
+        #map-canvas {
+          width: 500px;
+          height: 400px;
+        }
+      </style>
+      <script>
+        function initialize() {
+          var myLatlng = new google.maps.LatLng(@location.get.latitude, @location.get.longitude);
+          var mapOptions = {
+            zoom: 6,
+            center: myLatlng
+          }
+          var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        
+          var marker = new google.maps.Marker({
+              position: myLatlng,
+              map: map,
+              title: 'I am here'
+          });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+      </script>
+    </div>
+  }
 }

@@ -9,6 +9,7 @@ Simple blogware with Play Framework
   - Awesome social share buttons
   - That's pretty much it ;)
   - Full yo API integration (tm)
+  - Geo tracker service integration. See config file an [https://github.com/sne11ius/geotracker-service](https://github.com/sne11ius/geotracker-service)
 
 ## Build
 

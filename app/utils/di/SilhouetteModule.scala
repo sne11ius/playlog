@@ -28,6 +28,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
   def configure() {
     bind[UserService].to[UserServiceImpl]
     bind[PostService].to[PostServiceImpl]
+    bind[GeoTrackerService].to[GeoTrackerServiceImpl]
     bind[UserDAO].to[UserDAOSlick]
     bind[YoSubscriberDAO].to[YoSubscriberDAOSlick]
     bind[YoService].to[YoServiceImpl]
@@ -192,7 +193,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
 
     TwitterProvider(cacheLayer, httpLayer, new PlayOAuth1Service(settings), settings)
   }
-  
+
   @Provides
   def provideGitHubProvider(cacheLayer: CacheLayer, httpLayer: HTTPLayer): GitHubProvider = {
     GitHubProvider(cacheLayer, httpLayer, OAuth2Settings(
