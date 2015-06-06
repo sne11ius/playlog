@@ -26,7 +26,7 @@ class GeoTrackerServiceImpl extends GeoTrackerService {
   def getLatest: Option[GeoCoord] = {
     current.configuration.getString("geotracker.url") match {
       case Some(text) => {
-        var url = text + "/coordinates/latest"
+        var url = text + "/rest/coordinates/latest"
         Logger.debug(s"Posting to $url")
         var apiKey = current.configuration.getString("geotraker.apikey").get
         Await.result(WS.url(url).withFollowRedirects(true).withHeaders("Content-Type" -> "application/x-www-form-urlencoded").post(s"apiKey=$apiKey").map { response =>
